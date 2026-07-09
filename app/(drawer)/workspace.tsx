@@ -8,6 +8,8 @@ import { MonacoEditor } from "../../components/workspace/MonacoEditor";
 import { FileExplorer } from "../../components/workspace/FileExplorer";
 import { LivePreview } from "../../components/workspace/LivePreview";
 import { AgentChat, AgentTeamBar } from "../../components/workspace/AgentChat";
+import { SessionBadge } from "../../components/agentic/SessionBadge";
+import { CollaborationIndicator } from "../../components/agentic/CollaborationIndicator";
 import { colors, gradients, radius } from "../../constants/theme";
 import { useEditorStore, type WorkspaceTab } from "../../stores/editorStore";
 import { useProjectStore } from "../../stores/projectStore";
@@ -48,6 +50,8 @@ export default function WorkspaceScreen() {
         />
 
         <AgentTeamBar />
+        <SessionBadge />
+        <CollaborationIndicator />
 
         <View
           style={{

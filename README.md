@@ -45,6 +45,17 @@ EXPO_PUBLIC_GITHUB_CLIENT_ID=your_client_id
 
 Imported repos appear in **Projects** and open in the **Workspace** with files loaded from the default branch.
 
+## Agentic Repo-Based Login
+
+For secure freelancer and open-source collaboration, use the **Agentic Repo-Based Login System**:
+
+1. Open **Repositories** → **Request Scoped Access** on any repo
+2. Security Agent analyzes permissions and risk
+3. Configure session duration, read/write scope, and folder restrictions
+4. Manage sessions and audit logs in **Access Control**
+
+See [docs/AGENTIC_LOGIN.md](docs/AGENTIC_LOGIN.md) for full documentation.
+
 ## Quick Start
 
 ### Prerequisites

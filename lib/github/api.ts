@@ -1,6 +1,7 @@
 import { Buffer } from "buffer";
 import type { ProjectFile } from "../../constants/sampleProject";
 import type { GitHubRepo, GitHubUser } from "./types";
+import type { PermissionLevel } from "../agentic/types";
 
 const API_BASE = "https://api.github.com";
 
@@ -56,6 +57,27 @@ export async function fetchUserRepos(token: string): Promise<GitHubRepo[]> {
   return githubFetch<GitHubRepo[]>("/user/repos?sort=updated&per_page=100", token);
 }
 
+export async function fetchRepoPermission(
+  token: string,
+  owner: string,
+  repo: string,
+  username: string
+): Promise<PermissionLevel> {
+  try {
+    const data = await githubFetch<{ permission: string }>(
+      `/repos/${owner}/${repo}/collaborators/${username}/permission`,
+      token
+    );
+    const perm = data.permission?.toLowerCase();
+    if (perm === "admin") return "admin";
+    if (perm === "write" || perm === "maintain") return "write";
+    if (perm === "read" || perm === "triage") return "read";
+    return "none";
+  } catch {
+    return "none";
+  }
+}
+
 interface TreeResponse {
   tree: { path: string; type: string; sha: string }[];
 }
@@ -97,7 +119,8 @@ export async function fetchRepoFiles(
   token: string,
   owner: string,
   repo: string,
-  branch: string
+  branch: string,
+  folderScope: string[] = []
 ): Promise<ProjectFile[]> {
   const tree = await githubFetch<TreeResponse>(
     `/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`,
@@ -106,6 +129,12 @@ export async function fetchRepoFiles(
 
   const paths = tree.tree
     .filter((item) => item.type === "blob" && isTextFile(item.path))
+    .filter((item) => {
+      if (folderScope.length === 0) return true;
+      return folderScope.some(
+        (folder) => item.path === folder || item.path.startsWith(`${folder}/`)
+      );
+    })
     .map((item) => item.path)
     .slice(0, MAX_FILES);
 

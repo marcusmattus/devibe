@@ -15,10 +15,13 @@ import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { TopBar } from "../../components/layout/TopBar";
 import { GlassCard } from "../../components/ui/GlassCard";
 import { GitHubConnectCard } from "../../components/github/GitHubConnectCard";
+import { AgenticLoginModal } from "../../components/agentic/AgenticLoginModal";
 import { colors, gradients, radius } from "../../constants/theme";
 import { useAuthStore } from "../../stores/authStore";
 import { useGitHubRepos } from "../../hooks/useGitHubRepos";
 import { useProjectStore } from "../../stores/projectStore";
+import { useAgenticAuthStore } from "../../stores/agenticAuthStore";
+import type { GitHubRepo } from "../../lib/github/types";
 
 export default function RepositoriesScreen() {
   const openDrawer = useOpenDrawer();
@@ -26,21 +29,42 @@ export default function RepositoriesScreen() {
   const user = useAuthStore((s) => s.accessToken);
   const importGitHubRepo = useProjectStore((s) => s.importGitHubRepo);
   const accessToken = useAuthStore((s) => s.accessToken);
+  const authUser = useAuthStore((s) => s.user);
+  const logAudit = useAgenticAuthStore((s) => s.logAudit);
+  const getSession = useAgenticAuthStore((s) => s.getActiveSession);
   const { data: repos, isLoading, isRefetching, refetch, error } = useGitHubRepos();
   const [importingId, setImportingId] = useState<number | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
+  const [selectedRepo, setSelectedRepo] = useState<GitHubRepo | null>(null);
+  const [showAgenticModal, setShowAgenticModal] = useState(false);
 
-  const handleImport = async (repo: NonNullable<typeof repos>[number]) => {
-    if (!accessToken) return;
-    setImportingId(repo.id);
+  const handleRequestAccess = (repo: GitHubRepo) => {
+    setSelectedRepo(repo);
+    setShowAgenticModal(true);
+  };
+
+  const handleSessionCreated = async (_sessionId: string) => {
+    if (!selectedRepo || !accessToken || !authUser) return;
+    setImportingId(selectedRepo.id);
     setImportError(null);
     try {
-      await importGitHubRepo(repo, accessToken);
+      const session = getSession();
+      const folderScope = session?.scopes.folders ?? [];
+      await importGitHubRepo(selectedRepo, accessToken, folderScope);
+      await logAudit({
+        action: "repo_imported",
+        sessionId: session?.id,
+        repoFullName: selectedRepo.full_name,
+        severity: "info",
+        details: `Repository imported with scoped access`,
+        actor: authUser.login,
+      });
       router.push("/workspace");
     } catch (err) {
       setImportError(err instanceof Error ? err.message : "Failed to import repository");
     } finally {
       setImportingId(null);
+      setSelectedRepo(null);
     }
   };
 
@@ -48,7 +72,7 @@ export default function RepositoriesScreen() {
     <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
       <TopBar
         greeting="Repositories"
-        subtitle={user ? "Import a GitHub repo into your workspace" : "Sign in to access your repos"}
+        subtitle={user ? "Agentic scoped access to your GitHub repos" : "Sign in to access your repos"}
         showSearch={false}
         onMenuPress={openDrawer}
       />
@@ -165,7 +189,7 @@ export default function RepositoriesScreen() {
                     </View>
 
                     <TouchableOpacity
-                      onPress={() => handleImport(repo)}
+                      onPress={() => handleRequestAccess(repo)}
                       disabled={isImporting}
                       style={{
                         marginTop: 12,
@@ -185,7 +209,7 @@ export default function RepositoriesScreen() {
                         <Github size={14} color={colors.purple} />
                       )}
                       <Text style={{ color: colors.purple, fontWeight: "600", fontSize: 13 }}>
-                        {isImporting ? "Importing..." : "Open in Workspace"}
+                        {isImporting ? "Importing..." : "Request Scoped Access"}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -206,6 +230,16 @@ export default function RepositoriesScreen() {
           </>
         )}
       </ScrollView>
+
+      <AgenticLoginModal
+        visible={showAgenticModal}
+        repo={selectedRepo}
+        onClose={() => {
+          setShowAgenticModal(false);
+          setSelectedRepo(null);
+        }}
+        onSessionCreated={handleSessionCreated}
+      />
     </LinearGradient>
   );
 }

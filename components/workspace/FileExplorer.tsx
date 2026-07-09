@@ -4,6 +4,7 @@ import { useState } from "react";
 import { colors, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
 import { useEditorStore } from "../../stores/editorStore";
+import { useAgenticAuthStore } from "../../stores/agenticAuthStore";
 import type { ProjectFile } from "../../constants/sampleProject";
 
 export function FileExplorer() {
@@ -12,6 +13,8 @@ export function FileExplorer() {
   const setActiveFile = useProjectStore((s) => s.setActiveFile);
   const createProject = useProjectStore((s) => s.createProject);
   const setWorkspaceTab = useEditorStore((s) => s.setWorkspaceTab);
+  const canWritePath = useAgenticAuthStore((s) => s.canWritePath);
+  const activeSession = useAgenticAuthStore((s) => s.getActiveSession());
   const [expandedFolders, setExpandedFolders] = useState<Record<string, boolean>>({});
 
   const toggleFolder = (folder: string) => {
@@ -119,6 +122,8 @@ export function FileExplorer() {
               {expanded &&
                 files.map((file) => {
                   const isActive = activeFile?.path === file.path;
+                  const isReadOnly =
+                    activeSession && (!canWritePath(file.path) || activeSession.scopes.contents === "read");
                   return (
                     <TouchableOpacity
                       key={file.path}
@@ -140,10 +145,14 @@ export function FileExplorer() {
                           color: isActive ? colors.purple : colors.textSecondary,
                           fontSize: 13,
                           fontWeight: isActive ? "600" : "400",
+                          flex: 1,
                         }}
                       >
                         {file.name}
                       </Text>
+                      {isReadOnly && (
+                        <Text style={{ color: colors.textMuted, fontSize: 10 }}>read</Text>
+                      )}
                     </TouchableOpacity>
                   );
                 })}

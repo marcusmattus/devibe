@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Project, ProjectFile, SAMPLE_FILES, SAMPLE_PROJECTS } from "../constants/sampleProject";
 import type { GitHubRepo } from "../lib/github/types";
 import { fetchRepoFiles } from "../lib/github/api";
+import { useAgenticAuthStore } from "./agenticAuthStore";
 
 interface ProjectState {
   projects: Project[];
@@ -11,7 +12,7 @@ interface ProjectState {
   setActiveFile: (file: ProjectFile) => void;
   updateFileContent: (path: string, content: string) => void;
   createProject: (name: string, type: string) => void;
-  importGitHubRepo: (repo: GitHubRepo, token: string) => Promise<Project>;
+  importGitHubRepo: (repo: GitHubRepo, token: string, folderScope?: string[]) => Promise<Project>;
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
@@ -30,6 +31,18 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
   updateFileContent: (path, content) => {
     const { activeProject, activeFile } = get();
     if (!activeProject) return;
+
+    const canWrite = useAgenticAuthStore.getState().canWritePath(path);
+    if (!canWrite) return;
+
+    void useAgenticAuthStore.getState().logAudit({
+      action: "file_write",
+      repoFullName: activeProject.github?.fullName,
+      severity: "info",
+      details: `Edited ${path}`,
+      actor: "user",
+    });
+    void useAgenticAuthStore.getState().recordAction();
 
     const updatedFiles = activeProject.files.map((f) =>
       f.path === path ? { ...f, content } : f
@@ -67,12 +80,13 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     }));
   },
 
-  importGitHubRepo: async (repo, token) => {
+  importGitHubRepo: async (repo, token, folderScope: string[] = []) => {
     const files = await fetchRepoFiles(
       token,
       repo.owner.login,
       repo.name,
-      repo.default_branch
+      repo.default_branch,
+      folderScope
     );
 
     const existing = get().projects.find(

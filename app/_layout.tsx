@@ -7,15 +7,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CommandPalette } from "../components/workspace/CommandPalette";
 import { RightPanel } from "../components/right-panel/RightPanel";
 import { useAuthStore } from "../stores/authStore";
+import { useAgenticAuthStore } from "../stores/agenticAuthStore";
 
 const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const hydrate = useAuthStore((s) => s.hydrate);
+  const hydrateAgentic = useAgenticAuthStore((s) => s.hydrate);
 
   useEffect(() => {
     hydrate();
-  }, [hydrate]);
+    hydrateAgentic();
+  }, [hydrate, hydrateAgentic]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

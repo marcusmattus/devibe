@@ -11,6 +11,7 @@ import {
   Star,
   ChevronRight,
   Github,
+  Shield,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, gradients, radius } from "../../constants/theme";
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { route: "index", label: "Home", icon: Home },
   { route: "projects", label: "Projects", icon: FolderKanban },
   { route: "repositories", label: "Repositories", icon: Github },
+  { route: "access-control", label: "Access Control", icon: Shield },
   { route: "workspace", label: "Workspace", icon: Sparkles },
   { route: "agents", label: "Agents", icon: Bot },
   { route: "workflows", label: "Workflows", icon: Workflow },

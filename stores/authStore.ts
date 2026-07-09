@@ -4,6 +4,7 @@ import { deleteSecureItem, getSecureItem, setSecureItem } from "../lib/secureSto
 import { pollDeviceToken, requestDeviceCode } from "../lib/github/deviceAuth";
 import { fetchGitHubUser, validateToken } from "../lib/github/api";
 import type { DeviceFlowPending, GitHubUser } from "../lib/github/types";
+import { useAgenticAuthStore } from "./agenticAuthStore";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -87,6 +88,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         deviceFlow: null,
         isLoading: false,
       });
+
+      const login = useAgenticAuthStore.getState();
+      void login.logAudit({
+        action: "login",
+        severity: "info",
+        details: "GitHub device flow sign-in successful",
+        actor: user.login,
+      });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "GitHub sign-in failed",
@@ -114,6 +123,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await setSecureItem(TOKEN_KEY, trimmed);
       await setSecureItem(USER_KEY, JSON.stringify(user));
       set({ accessToken: trimmed, user, isLoading: false });
+      void useAgenticAuthStore.getState().logAudit({
+        action: "login",
+        severity: "info",
+        details: "GitHub PAT sign-in successful",
+        actor: user.login,
+      });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : "Invalid GitHub token",
@@ -123,6 +138,16 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
+    const user = get().user;
+    if (user) {
+      await useAgenticAuthStore.getState().revokeAllSessions(user.login);
+      void useAgenticAuthStore.getState().logAudit({
+        action: "logout",
+        severity: "info",
+        details: "GitHub sign-out",
+        actor: user.login,
+      });
+    }
     await deleteSecureItem(TOKEN_KEY);
     await deleteSecureItem(USER_KEY);
     set({ accessToken: null, user: null, deviceFlow: null, error: null });
