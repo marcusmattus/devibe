@@ -23,19 +23,16 @@ DeVibe Cloud Mobile supports GitHub authentication so you can browse and import 
 
 ### Option A: OAuth Device Flow (recommended)
 
-1. Create a [GitHub OAuth App](https://github.com/settings/developers) (type: OAuth App)
+1. Open your [GitHub OAuth App](https://github.com/settings/developers) (Client ID is pre-configured for DeVibe)
 2. Enable **Device Flow** in the app settings
-3. Copy the **Client ID** and add it to `.env.local`:
-
-```bash
-cp .env.example .env.local
-# Edit .env.local:
-EXPO_PUBLIC_GITHUB_CLIENT_ID=your_client_id
-```
-
-4. Restart the Expo dev server
-5. Open **Repositories** in the drawer → **Sign in with GitHub**
+3. Register the redirect URI `devibe://github/oauth` if you use the OAuth code fallback
+4. Restart the Expo dev server after changing `.env`
+5. Tap **Continue with GitHub** on the login screen (or **Repositories** → **Sign in with GitHub**)
 6. Enter the device code shown in the app on GitHub
+
+The app ships with `EXPO_PUBLIC_GITHUB_CLIENT_ID=d4ab3bdc49967a7282bb1c0560db28813ccceabc`. Override it in `.env` if needed.
+
+**OAuth code fallback:** If Device Flow stays disabled, set `EXPO_PUBLIC_GITHUB_CLIENT_SECRET` in `.env` and register `devibe://github/oauth` as the callback URL on your OAuth app.
 
 ### Option B: Personal Access Token
 

@@ -4,6 +4,13 @@ import type { DeviceCodeResponse, DeviceFlowPending } from "./types";
 const DEVICE_CODE_URL = "https://github.com/login/device/code";
 const ACCESS_TOKEN_URL = "https://github.com/login/oauth/access_token";
 
+export class DeviceFlowUnavailableError extends Error {
+  constructor(message = "GitHub device flow is not available for this OAuth app") {
+    super(message);
+    this.name = "DeviceFlowUnavailableError";
+  }
+}
+
 function assertClientId(): string {
   if (!config.github.isConfigured) {
     throw new Error(
@@ -13,28 +20,48 @@ function assertClientId(): string {
   return config.github.clientId;
 }
 
-export async function requestDeviceCode(): Promise<DeviceFlowPending & { deviceCode: string; interval: number }> {
+function isDeviceFlowUnavailable(status: number, body: string): boolean {
+  if (status === 404) return true;
+  return body.includes("device_flow_disabled") || body.includes('"error":"Not Found"');
+}
+
+export async function requestDeviceCode(): Promise<
+  DeviceFlowPending & { deviceCode: string; interval: number }
+> {
   const clientId = assertClientId();
+
+  const body = new URLSearchParams({
+    client_id: clientId,
+    scope: config.github.scopes.join(" "),
+  });
 
   const response = await fetch(DEVICE_CODE_URL, {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: JSON.stringify({
-      client_id: clientId,
-      scope: config.github.scopes.join(" "),
-    }),
+    body: body.toString(),
   });
 
+  const text = await response.text();
+
   if (!response.ok) {
-    const text = await response.text();
+    if (isDeviceFlowUnavailable(response.status, text)) {
+      throw new DeviceFlowUnavailableError();
+    }
     throw new Error(`GitHub device code request failed: ${text}`);
   }
 
-  const data = (await response.json()) as DeviceCodeResponse & { error?: string; error_description?: string };
+  const data = JSON.parse(text) as DeviceCodeResponse & {
+    error?: string;
+    error_description?: string;
+  };
+
   if (data.error) {
+    if (data.error === "device_flow_disabled") {
+      throw new DeviceFlowUnavailableError(data.error_description);
+    }
     throw new Error(data.error_description ?? data.error);
   }
 
@@ -47,7 +74,10 @@ export async function requestDeviceCode(): Promise<DeviceFlowPending & { deviceC
   };
 }
 
-export async function pollDeviceToken(deviceCode: string, intervalSeconds: number): Promise<string> {
+export async function pollDeviceToken(
+  deviceCode: string,
+  intervalSeconds: number
+): Promise<string> {
   const clientId = assertClientId();
   const intervalMs = Math.max(intervalSeconds, 5) * 1000;
   const deadline = Date.now() + 15 * 60 * 1000;
@@ -55,17 +85,19 @@ export async function pollDeviceToken(deviceCode: string, intervalSeconds: numbe
   while (Date.now() < deadline) {
     await sleep(intervalMs);
 
+    const body = new URLSearchParams({
+      client_id: clientId,
+      device_code: deviceCode,
+      grant_type: "urn:ietf:params:oauth:grant-type:device_code",
+    });
+
     const response = await fetch(ACCESS_TOKEN_URL, {
       method: "POST",
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        client_id: clientId,
-        device_code: deviceCode,
-        grant_type: "urn:ietf:params:oauth:grant-type:device_code",
-      }),
+      body: body.toString(),
     });
 
     const data = (await response.json()) as {

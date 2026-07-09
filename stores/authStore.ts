@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import * as WebBrowser from "expo-web-browser";
 import { deleteSecureItem, getSecureItem, setSecureItem } from "../lib/secureStorage";
-import { pollDeviceToken, requestDeviceCode } from "../lib/github/deviceAuth";
+import { signInWithGitHub } from "../lib/github/signIn";
 import { fetchGitHubUser, validateToken } from "../lib/github/api";
 import type { DeviceFlowPending, GitHubUser } from "../lib/github/types";
 import { signInWithStripeOAuth } from "../lib/stripe/oauth";
@@ -144,18 +144,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ isLoading: true, error: null, deviceFlow: null });
 
     try {
-      const pending = await requestDeviceCode();
-      set({
-        deviceFlow: {
-          userCode: pending.userCode,
-          verificationUri: pending.verificationUri,
-          expiresIn: pending.expiresIn,
-        },
+      const { accessToken: token } = await signInWithGitHub((pending) => {
+        set({ deviceFlow: pending });
       });
-
-      await WebBrowser.openBrowserAsync(pending.verificationUri);
-
-      const token = await pollDeviceToken(pending.deviceCode, pending.interval);
       const user = await fetchGitHubUser(token);
 
       await setSecureItem(TOKEN_KEY, token);
