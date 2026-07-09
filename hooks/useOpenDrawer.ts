@@ -1,10 +1,7 @@
-import { useNavigation } from "expo-router";
+import { useUiStore } from "../stores/uiStore";
 
+/** Opens the app menu modal (replaces drawer on tab navigation). */
 export function useOpenDrawer() {
-  const navigation = useNavigation();
-  return () => {
-    if ("openDrawer" in navigation && typeof navigation.openDrawer === "function") {
-      navigation.openDrawer();
-    }
-  };
+  const setMenuOpen = useUiStore((s) => s.setMenuOpen);
+  return () => setMenuOpen(true);
 }

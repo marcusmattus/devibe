@@ -15,15 +15,54 @@ The DeVibe mobile companion for production Expo apps. A full-featured Expo (Reac
 - **Cloud Factory** — Terraform templates for AWS & GCP with auto-scaling, monitoring, and storage
 - **Production Bug Fixing** — AI-driven diagnosis and patch generation workflow
 - **Command Palette** — Cursor-style ⌘K command palette for quick navigation
+- **GitHub Integration** — Sign in with GitHub (device flow or PAT), browse repositories, and import code into the workspace
+
+## GitHub Sign-In
+
+DeVibe Cloud Mobile supports GitHub authentication so you can browse and import your repositories.
+
+### Option A: OAuth Device Flow (recommended)
+
+1. Open your [GitHub OAuth App](https://github.com/settings/developers) (Client ID is pre-configured for DeVibe)
+2. Enable **Device Flow** in the app settings
+3. Register the redirect URI `devibe://github/oauth` if you use the OAuth code fallback
+4. Restart the Expo dev server after changing `.env`
+5. Tap **Continue with GitHub** on the login screen (or **Repositories** → **Sign in with GitHub**)
+6. Enter the device code shown in the app on GitHub
+
+The app ships with `EXPO_PUBLIC_GITHUB_CLIENT_ID=Ov23lidyaJeTF76R9uTN`. Override it in `.env` if needed.
+
+**OAuth code fallback:** If Device Flow stays disabled, set `EXPO_PUBLIC_GITHUB_CLIENT_SECRET` in `.env` and register `devibe://github/oauth` as the callback URL on your OAuth app.
+
+### Option B: Personal Access Token
+
+1. Create a [GitHub PAT](https://github.com/settings/tokens) with `repo` and `read:user` scopes
+2. Open **Settings** or **Repositories** → **Use Personal Access Token**
+3. Paste your token and connect
+
+Imported repos appear in **Projects** and open in the **Workspace** with files loaded from the default branch.
+
+## Agentic Repo-Based Login
+
+For secure freelancer and open-source collaboration, use the **Agentic Repo-Based Login System**:
+
+1. Open **Repositories** → **Request Scoped Access** on any repo
+2. Security Agent analyzes permissions and risk
+3. Configure session duration, read/write scope, and folder restrictions
+4. Manage sessions and audit logs in **Access Control**
+
+See [docs/AGENTIC_LOGIN.md](docs/AGENTIC_LOGIN.md) for full documentation.
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
-- [Expo Go](https://expo.dev/go) on your iPhone (for development)
+- **[Expo Go](https://expo.dev/go)** from the App Store (supports SDK 54)
 - Xcode (for iOS simulator, macOS only)
+
+> **Note:** This project uses **Expo SDK 54** for compatibility with the App Store version of Expo Go. SDK 57+ requires a development build.
 
 ### Install & Run
 
@@ -47,6 +86,22 @@ npm run web
 ```
 
 Scan the QR code with Expo Go on your iPhone to test on device.
+
+### Splash & Login
+
+On launch, the app shows a **DeVibe splash screen** (animated logo + neon progress bar), then routes to the **login gateway** if not signed in.
+
+Sign-in options:
+- **GitHub** — Device flow OAuth for repo access
+- **Stripe** — Connect OAuth for payments & billing (demo mode without client ID)
+- **Email** — Email/password sign-in
+- **Continue without signing in** — Guest mode
+
+```bash
+# Optional Stripe Connect
+EXPO_PUBLIC_STRIPE_CLIENT_ID=ca_...
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
 
 ### Type Check
 
