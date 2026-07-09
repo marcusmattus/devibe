@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Home,
@@ -12,7 +12,6 @@ import {
   ChevronRight,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DrawerContentScrollView } from "@react-navigation/drawer";
 import { colors, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
 
@@ -51,7 +50,8 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
       colors={["#0F0F1A", "#0A0A0F"]}
       style={{ flex: 1, paddingTop: insets.top }}
     >
-      <DrawerContentScrollView
+      <ScrollView
+        style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
         showsVerticalScrollIndicator={false}
       >
@@ -158,7 +158,7 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
           </View>
           <ChevronRight size={16} color={colors.textMuted} />
         </View>
-      </DrawerContentScrollView>
+      </ScrollView>
     </LinearGradient>
   );
 }

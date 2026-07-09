@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, Switch, TextInput } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useState } from "react";
 import { TopBar } from "../../components/layout/TopBar";
@@ -8,7 +8,7 @@ import { GlassCard } from "../../components/ui/GlassCard";
 import { colors, radius } from "../../constants/theme";
 
 export default function SettingsScreen() {
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
   const [darkMode, setDarkMode] = useState(true);
   const [aiEnabled, setAiEnabled] = useState(true);
@@ -20,7 +20,7 @@ export default function SettingsScreen() {
         greeting="Settings"
         subtitle="Configure your DeVibe Cloud Mobile experience"
         showSearch={false}
-        onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        onMenuPress={openDrawer}
       />
       <ScrollView
         contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}

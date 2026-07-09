@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Plus, FolderKanban } from "lucide-react-native";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TopBar } from "../../components/layout/TopBar";
 import { GlowButton } from "../../components/ui/GlowButton";
@@ -17,7 +17,7 @@ const STATUS_COLORS = {
 };
 
 export default function ProjectsScreen() {
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
   const projects = useProjectStore((s) => s.projects);
   const setActiveProject = useProjectStore((s) => s.setActiveProject);
@@ -30,7 +30,7 @@ export default function ProjectsScreen() {
         greeting="Projects"
         subtitle={`${projects.length} active projects`}
         showSearch={false}
-        onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        onMenuPress={openDrawer}
       />
       <ScrollView
         contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}

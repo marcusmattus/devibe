@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Bot, Shield, Cloud, TestTube, Layout, Server } from "lucide-react-native";
 import { TopBar } from "../../components/layout/TopBar";
@@ -29,7 +29,7 @@ const ROLE_COLORS: Record<AgentRole, string> = {
 };
 
 export default function AgentsScreen() {
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
   const agents = useAgentStore((s) => s.agents);
 
@@ -40,7 +40,7 @@ export default function AgentsScreen() {
           greeting="AI Agents"
           subtitle="Multi-agent team for vibe coding"
           showSearch={false}
-          onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+          onMenuPress={openDrawer}
         />
 
         <ScrollView

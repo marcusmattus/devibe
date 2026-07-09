@@ -1,6 +1,6 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Cloud, Server, Database, HardDrive, Activity, Rocket } from "lucide-react-native";
 import { TopBar } from "../../components/layout/TopBar";
@@ -18,7 +18,7 @@ const RESOURCE_ICONS = {
 };
 
 export default function CloudScreen() {
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
   const resources = useCloudStore((s) => s.resources);
   const deployTargets = useCloudStore((s) => s.deployTargets);
@@ -32,7 +32,7 @@ export default function CloudScreen() {
         greeting="Cloud Factory"
         subtitle="Production infrastructure at scale"
         showSearch={false}
-        onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        onMenuPress={openDrawer}
       />
       <ScrollView
         contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}

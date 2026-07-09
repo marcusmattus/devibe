@@ -1,7 +1,7 @@
 import { View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { TopBar, FloatingChatBar } from "../../components/layout/TopBar";
 import { HeroSection, QuickActions } from "../../components/home/HeroSection";
 import { SuggestedProjects } from "../../components/home/SuggestedProjects";
@@ -11,7 +11,7 @@ import { useAgentStore } from "../../stores/agentStore";
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
   const prompt = useAgentStore((s) => s.prompt);
   const setPrompt = useAgentStore((s) => s.setPrompt);
@@ -21,7 +21,7 @@ export default function HomeScreen() {
     <LinearGradient colors={["#0F0F1A", "#0A0A0F", "#1A0A2E"]} style={{ flex: 1 }}>
       <TopBar
         subtitle="What do you want to build today?"
-        onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+        onMenuPress={openDrawer}
         onSearchPress={() => setCommandPaletteOpen(true)}
       />
       <ScrollView

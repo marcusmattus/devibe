@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useNavigation, DrawerActions } from "@react-navigation/native";
+import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Code2,
@@ -26,7 +26,7 @@ const TABS: { id: WorkspaceTab; label: string; icon: React.ComponentType<{ size:
 ];
 
 export default function WorkspaceScreen() {
-  const navigation = useNavigation();
+  const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
   const workspaceTab = useEditorStore((s) => s.workspaceTab);
   const setWorkspaceTab = useEditorStore((s) => s.setWorkspaceTab);
@@ -46,7 +46,7 @@ export default function WorkspaceScreen() {
               subtitle={activeFile?.path ?? "Select a file"}
               showSearch={false}
               showCredits={false}
-              onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              onMenuPress={openDrawer}
             />
           </View>
           <TouchableOpacity onPress={toggleRightPanel} style={{ padding: 8, marginTop: 8 }}>
@@ -125,6 +125,7 @@ export default function WorkspaceScreen() {
                 language={activeFile.language}
                 path={activeFile.path}
                 onChange={(content) => updateFileContent(activeFile.path, content)}
+                onCommandPalette={() => setCommandPaletteOpen(true)}
               />
             </View>
           )}
