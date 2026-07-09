@@ -2,24 +2,14 @@ import { View, Text, TextInput, ScrollView, TouchableOpacity } from "react-nativ
 import { Paperclip, Image as ImageIcon } from "lucide-react-native";
 import { NeonOrb } from "../ui/NeonOrb";
 import { GlowButton } from "../ui/GlowButton";
-import { useAgentStore } from "../../stores/agentStore";
+import { usePromptSubmit } from "../../hooks/usePromptSubmit";
 import { QUICK_ACTIONS } from "../../constants/sampleProject";
 import { colors, radius } from "../../constants/theme";
-import { useEditorStore } from "../../stores/editorStore";
-import { router } from "expo-router";
 
 export function HeroSection() {
-  const prompt = useAgentStore((s) => s.prompt);
-  const setPrompt = useAgentStore((s) => s.setPrompt);
-  const sendPrompt = useAgentStore((s) => s.sendPrompt);
-  const setWorkspaceTab = useEditorStore((s) => s.setWorkspaceTab);
+  const { prompt, setPrompt, submitPrompt } = usePromptSubmit();
 
-  const handleSend = async () => {
-    if (!prompt.trim()) return;
-    setWorkspaceTab("chat");
-    router.push("/workspace");
-    await sendPrompt(prompt);
-  };
+  const handleSend = () => submitPrompt();
 
   return (
     <View style={{ alignItems: "center", paddingVertical: 24 }}>
@@ -98,7 +88,7 @@ export function HeroSection() {
 }
 
 export function QuickActions() {
-  const setPrompt = useAgentStore((s) => s.setPrompt);
+  const { setPrompt, submitPrompt } = usePromptSubmit();
 
   return (
     <ScrollView
@@ -110,7 +100,10 @@ export function QuickActions() {
       {QUICK_ACTIONS.map((action: string) => (
         <TouchableOpacity
           key={action}
-          onPress={() => setPrompt(action)}
+          onPress={() => {
+            setPrompt(action);
+            submitPrompt(action);
+          }}
           style={{
             paddingHorizontal: 16,
             paddingVertical: 10,

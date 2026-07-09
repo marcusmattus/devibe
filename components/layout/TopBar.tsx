@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Platform } from "react-native";
 import { Bell, Search, Menu, PanelRight } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, radius } from "../../constants/theme";
@@ -10,6 +10,8 @@ interface TopBarProps {
   subtitle?: string;
   showSearch?: boolean;
   showCredits?: boolean;
+  showPanel?: boolean;
+  useSafeArea?: boolean;
   onMenuPress?: () => void;
   onSearchPress?: () => void;
 }
@@ -26,6 +28,8 @@ export function TopBar({
   subtitle,
   showSearch = true,
   showCredits = true,
+  showPanel = true,
+  useSafeArea = true,
   onMenuPress,
   onSearchPress,
 }: TopBarProps) {
@@ -33,17 +37,33 @@ export function TopBar({
   const toggleRightPanel = useEditorStore((s) => s.toggleRightPanel);
   const credits = useCloudStore((s) => s.credits);
   const creditPercent = Math.round((credits.used / credits.total) * 100);
+  const displayTitle = greeting ?? (subtitle && !greeting ? `${getGreeting()}, Marcus` : undefined);
+  const showHeader = displayTitle !== undefined || subtitle !== undefined;
 
   return (
-    <View style={{ paddingTop: insets.top + 8, paddingHorizontal: 16, paddingBottom: 12 }}>
-      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+    <View
+      style={{
+        paddingTop: useSafeArea ? insets.top + 8 : 0,
+        paddingHorizontal: 16,
+        paddingBottom: 12,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: showHeader || showSearch ? 12 : 0,
+        }}
+      >
         <TouchableOpacity onPress={onMenuPress} style={{ padding: 4 }}>
           <Menu size={24} color={colors.text} />
         </TouchableOpacity>
 
         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
           {showCredits && (
-            <View
+            <TouchableOpacity
+              onPress={toggleRightPanel}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -62,29 +82,42 @@ export function TopBar({
                   borderRadius: 4,
                   backgroundColor: colors.purple,
                   marginRight: 6,
+                  shadowColor: colors.purple,
+                  shadowOpacity: 0.8,
+                  shadowRadius: 4,
                 }}
               />
               <Text style={{ color: colors.textSecondary, fontSize: 12 }}>
                 {creditPercent}% credits
               </Text>
-            </View>
+            </TouchableOpacity>
           )}
-          <TouchableOpacity style={{ padding: 4 }}>
+          <TouchableOpacity onPress={toggleRightPanel} style={{ padding: 4 }}>
             <Bell size={22} color={colors.textSecondary} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={toggleRightPanel} style={{ padding: 4 }}>
-            <PanelRight size={22} color={colors.textSecondary} />
-          </TouchableOpacity>
+          {showPanel && (
+            <TouchableOpacity onPress={toggleRightPanel} style={{ padding: 4 }}>
+              <PanelRight size={22} color={colors.textSecondary} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 
-      {greeting !== undefined && (
+      {showHeader && (
         <View style={{ marginBottom: showSearch ? 12 : 0 }}>
-          <Text style={{ color: colors.text, fontSize: 24, fontWeight: "700" }}>
-            {greeting ?? `${getGreeting()}, Marcus`} 👋
-          </Text>
+          {displayTitle && (
+            <Text style={{ color: colors.text, fontSize: 24, fontWeight: "700" }}>
+              {displayTitle} 👋
+            </Text>
+          )}
           {subtitle && (
-            <Text style={{ color: colors.textSecondary, fontSize: 15, marginTop: 4 }}>
+            <Text
+              style={{
+                color: colors.textSecondary,
+                fontSize: 15,
+                marginTop: displayTitle ? 4 : 0,
+              }}
+            >
               {subtitle}
             </Text>
           )}
@@ -119,7 +152,9 @@ export function TopBar({
               borderRadius: 6,
             }}
           >
-            <Text style={{ color: colors.textMuted, fontSize: 12 }}>⌘K</Text>
+            <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+              {Platform.OS === "ios" ? "⌘K" : "Search"}
+            </Text>
           </View>
         </TouchableOpacity>
       )}
@@ -131,19 +166,17 @@ export function FloatingChatBar({
   value,
   onChangeText,
   onSend,
-  onAttach,
 }: {
   value: string;
   onChangeText: (text: string) => void;
   onSend: () => void;
-  onAttach?: () => void;
 }) {
   return (
     <View
       style={{
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "rgba(18, 18, 26, 0.95)",
+        backgroundColor: "rgba(18, 18, 26, 0.98)",
         borderTopWidth: 1,
         borderTopColor: colors.border,
         paddingHorizontal: 16,
@@ -156,12 +189,14 @@ export function FloatingChatBar({
           width: 32,
           height: 32,
           borderRadius: 8,
-          backgroundColor: "rgba(255,255,255,0.06)",
+          backgroundColor: "rgba(168, 85, 247, 0.15)",
           alignItems: "center",
           justifyContent: "center",
+          borderWidth: 1,
+          borderColor: colors.border,
         }}
       >
-        <Text style={{ color: colors.textMuted, fontSize: 14 }}>⌘</Text>
+        <Text style={{ color: colors.purple, fontSize: 14, fontWeight: "700" }}>AI</Text>
       </View>
       <TextInput
         value={value}
@@ -179,16 +214,17 @@ export function FloatingChatBar({
       />
       <TouchableOpacity
         onPress={onSend}
+        disabled={!value.trim()}
         style={{
           width: 40,
           height: 40,
           borderRadius: 20,
-          backgroundColor: colors.purple,
+          backgroundColor: value.trim() ? colors.purple : colors.muted,
           alignItems: "center",
           justifyContent: "center",
           shadowColor: colors.purple,
           shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: 0.5,
+          shadowOpacity: value.trim() ? 0.5 : 0,
           shadowRadius: 8,
         }}
       >
