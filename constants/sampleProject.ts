@@ -12,6 +12,15 @@ export interface Project {
   status: "deployed" | "in_progress" | "draft";
   updatedAt: string;
   files: ProjectFile[];
+  source?: "local" | "github";
+  github?: {
+    owner: string;
+    repo: string;
+    fullName: string;
+    defaultBranch: string;
+    htmlUrl: string;
+    private: boolean;
+  };
 }
 
 export const SAMPLE_FILES: ProjectFile[] = [

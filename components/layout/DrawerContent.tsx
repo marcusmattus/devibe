@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Home,
@@ -10,14 +10,17 @@ import {
   Sparkles,
   Star,
   ChevronRight,
+  Github,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, gradients, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
+import { useAuthStore } from "../../stores/authStore";
 
 const NAV_ITEMS = [
   { route: "index", label: "Home", icon: Home },
   { route: "projects", label: "Projects", icon: FolderKanban },
+  { route: "repositories", label: "Repositories", icon: Github },
   { route: "workspace", label: "Workspace", icon: Sparkles },
   { route: "agents", label: "Agents", icon: Bot },
   { route: "workflows", label: "Workflows", icon: Workflow },
@@ -42,6 +45,7 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
   const activeRoute = state.routes[state.index]?.name ?? "index";
   const projects = useProjectStore((s) => s.projects);
   const setActiveProject = useProjectStore((s) => s.setActiveProject);
+  const authUser = useAuthStore((s) => s.user);
   const favorites = projects.slice(0, 3);
 
   const openProject = (projectId: string) => {
@@ -192,25 +196,49 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
             gap: 12,
           }}
         >
-          <LinearGradient
-            colors={[...gradients.purpleBlue]}
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 20,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ color: "#FFF", fontWeight: "700" }}>M</Text>
-          </LinearGradient>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>Marcus Chen</Text>
-            <Text style={{ color: colors.textMuted, fontSize: 12 }}>{projects.length} projects</Text>
-          </View>
-          <TouchableOpacity onPress={() => navigation.navigate("settings")}>
-            <ChevronRight size={16} color={colors.textMuted} />
-          </TouchableOpacity>
+          {authUser ? (
+            <>
+              <Image
+                source={{ uri: authUser.avatar_url }}
+                style={{ width: 40, height: 40, borderRadius: 20 }}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>
+                  {authUser.name ?? authUser.login}
+                </Text>
+                <Text style={{ color: colors.textMuted, fontSize: 12 }}>@{authUser.login}</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate("repositories")}>
+                <ChevronRight size={16} color={colors.textMuted} />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <LinearGradient
+                colors={[...gradients.purpleBlue]}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Github size={18} color="#FFF" />
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>
+                  Sign in with GitHub
+                </Text>
+                <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+                  Access your repositories
+                </Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate("repositories")}>
+                <ChevronRight size={16} color={colors.textMuted} />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </ScrollView>
     </LinearGradient>

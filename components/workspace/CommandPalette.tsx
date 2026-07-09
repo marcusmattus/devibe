@@ -16,6 +16,7 @@ import {
   Bug,
   Settings,
   GitBranch,
+  Github,
   Palette,
 } from "lucide-react-native";
 import { useState, useMemo, useEffect } from "react";
@@ -68,6 +69,17 @@ export function CommandPalette() {
         action: () => {
           setOpen(false);
           router.push("/agents");
+        },
+      },
+      {
+        id: "repositories",
+        label: "Browse GitHub Repos",
+        description: "Sign in and import repositories",
+        icon: Github,
+        category: "Navigation",
+        action: () => {
+          setOpen(false);
+          router.push("/repositories");
         },
       },
       {

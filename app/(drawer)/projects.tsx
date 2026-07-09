@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Plus, FolderKanban } from "lucide-react-native";
+import { Plus, FolderKanban, Github } from "lucide-react-native";
+import { router } from "expo-router";
 import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TopBar } from "../../components/layout/TopBar";
@@ -9,7 +10,6 @@ import { GlowButton } from "../../components/ui/GlowButton";
 import { colors, gradients, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
 import { useEditorStore } from "../../stores/editorStore";
-import { router } from "expo-router";
 
 const STATUS_COLORS = {
   deployed: colors.green,
@@ -41,6 +41,14 @@ export default function ProjectsScreen() {
           title="New Project"
           icon={<Plus size={18} color="#FFF" />}
           onPress={() => createProject("New Expo App", "Expo + TypeScript")}
+          style={{ marginBottom: 12 }}
+        />
+
+        <GlowButton
+          title="Import from GitHub"
+          variant="secondary"
+          icon={<Github size={18} color={colors.purple} />}
+          onPress={() => router.push("/repositories")}
           style={{ marginBottom: 20 }}
         />
 
@@ -80,6 +88,7 @@ export default function ProjectsScreen() {
                   </Text>
                   <Text style={{ color: colors.textMuted, fontSize: 13, marginTop: 2 }}>
                     {project.type} · {project.updatedAt}
+                    {project.source === "github" ? " · GitHub" : ""}
                   </Text>
                 </View>
                 <View

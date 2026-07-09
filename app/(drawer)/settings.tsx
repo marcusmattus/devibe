@@ -4,6 +4,7 @@ import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TopBar } from "../../components/layout/TopBar";
 import { GlassCard } from "../../components/ui/GlassCard";
+import { GitHubConnectCard } from "../../components/github/GitHubConnectCard";
 import { colors, gradients, radius } from "../../constants/theme";
 import { useSettingsStore } from "../../stores/settingsStore";
 
@@ -39,6 +40,10 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
+        <View style={{ marginBottom: 16 }}>
+          <GitHubConnectCard />
+        </View>
+
         <GlassCard style={{ marginBottom: 16 }}>
           <View style={{ padding: 16 }}>
             <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14, marginBottom: 16 }}>
