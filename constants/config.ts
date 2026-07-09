@@ -1,5 +1,5 @@
 /** Default GitHub OAuth App client ID for DeVibe Cloud Mobile */
-const DEFAULT_GITHUB_CLIENT_ID = "d4ab3bdc49967a7282bb1c0560db28813ccceabc";
+const DEFAULT_GITHUB_CLIENT_ID = "Ov23lidyaJeTF76R9uTN";
 
 const githubClientId =
   process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID ?? DEFAULT_GITHUB_CLIENT_ID;
