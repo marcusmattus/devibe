@@ -23,6 +23,8 @@ export default function DrawerLayout() {
     >
       <Drawer.Screen name="index" options={{ title: "Home" }} />
       <Drawer.Screen name="projects" options={{ title: "Projects" }} />
+      <Drawer.Screen name="repositories" options={{ title: "Repositories" }} />
+      <Drawer.Screen name="access-control" options={{ title: "Access Control" }} />
       <Drawer.Screen name="workspace" options={{ title: "Workspace" }} />
       <Drawer.Screen name="agents" options={{ title: "Agents" }} />
       <Drawer.Screen name="workflows" options={{ title: "Workflows" }} />

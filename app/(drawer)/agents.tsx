@@ -6,7 +6,7 @@ import { Bot, Shield, Cloud, TestTube, Layout, Server } from "lucide-react-nativ
 import { TopBar } from "../../components/layout/TopBar";
 import { GlassCard } from "../../components/ui/GlassCard";
 import { AgentChat } from "../../components/workspace/AgentChat";
-import { colors, radius } from "../../constants/theme";
+import { colors, gradients, radius } from "../../constants/theme";
 import { useAgentStore } from "../../stores/agentStore";
 import type { AgentRole } from "../../stores/agentStore";
 
@@ -35,7 +35,7 @@ export default function AgentsScreen() {
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <LinearGradient colors={["#0F0F1A", "#0A0A0F"]} style={{ flex: 1 }}>
+      <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
         <TopBar
           greeting="AI Agents"
           subtitle="Multi-agent team for vibe coding"
