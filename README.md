@@ -1,146 +1,139 @@
-# VibeCursor Pro
+# DeVibe Cloud Mobile
 
-The ultimate mobile AI coding companion. A full-featured Expo (React Native) app that brings the VS Code + Cursor experience to your iPhone.
+The DeVibe mobile companion for production Expo apps. A full-featured Expo (React Native) app that brings the VS Code + Cursor experience to your iPhone — with Monaco Editor, multi-agent AI, and production cloud infrastructure generation.
 
-![VibeCursor Pro](https://img.shields.io/badge/Expo-SDK%2057-000020?style=for-the-badge&logo=expo&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
-![Monaco](https://img.shields.io/badge/Monaco-Editor-A855F7?style=for-the-badge)
+![DeVibe Cloud Mobile](https://img.shields.io/badge/Expo-SDK%2057-4630EB?style=flat-square)
+![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey?style=flat-square)
+![Theme](https://img.shields.io/badge/UI-DeVibe%20Dark%20Neon-A855F7?style=flat-square)
 
 ## Features
 
-- **Monaco Editor** — Full VS Code engine with syntax highlighting, IntelliSense, multi-file tabs, and custom dark neon theme
-- **Cursor Mobile AI** — Multi-agent team (Frontend, Backend, Cloud DevOps, QA, Security) that edits code in real-time
-- **Scalable Cloud Factory** — Generate production AWS/GCP infrastructure with Terraform
-- **Bug Fixing Suite** — Connect cloud logs → AI diagnosis → Monaco patches
-- **Live Preview & Deploy** — Expo preview + one-click deploy to Vercel, AWS, or GCP
-- **DeVibe UI** — Dark futuristic purple/blue neon theme with glassmorphism
+- **Monaco Editor** — Full VS Code engine in a WebView with custom `devibe-dark` theme, syntax highlighting, and multi-file editing
+- **DeVibe Cloud AI** — Multi-agent team (Frontend, Backend, Cloud DevOps, QA, Security) with real-time code patches
+- **DeVibe UI** — Dark futuristic purple/blue neon theme with glassmorphism, glowing elements, and animated neon orb
+- **Live Preview & Deploy** — Expo/web preview with one-click deploy to EAS, Vercel, AWS, or GCP
+- **Cloud Factory** — Terraform templates for AWS & GCP with auto-scaling, monitoring, and storage
+- **Production Bug Fixing** — AI-driven diagnosis and patch generation workflow
+- **Command Palette** — Cursor-style ⌘K command palette for quick navigation
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 18+
 - npm or yarn
-- Expo Go app (for mobile testing) or iOS Simulator / Android Emulator
+- [Expo Go](https://expo.dev/go) on your iPhone (for development)
+- Xcode (for iOS simulator, macOS only)
 
-### Installation
+### Install & Run
 
 ```bash
+# Clone and install
 git clone <repo-url>
-cd vibecursor-pro
+cd devibe-cloud-mobile
 npm install
-```
 
-### Development
-
-```bash
-# Start Expo dev server (shows QR code)
+# Start Expo dev server
 npm start
 
-# Run in web browser (recommended for full Monaco experience)
-npm run web
-
-# Run on iOS simulator (requires macOS)
+# Run on iOS simulator (macOS)
 npm run ios
 
 # Run on Android emulator
 npm run android
+
+# Run in web browser
+npm run web
 ```
 
-### Demo Walkthrough
+Scan the QR code with Expo Go on your iPhone to test on device.
+
+### Type Check
 
 ```bash
-chmod +x scripts/demo.sh
-npm run demo
+npm run lint
 ```
 
 ## Project Structure
 
 ```
+devibe-cloud-mobile/
 ├── app/                    # Expo Router screens
-├── src/
-│   ├── components/
-│   │   ├── ai/             # Agent chat, inline edits
-│   │   ├── cloud/          # Cloud Factory, Bug Fix, Deploy views
-│   │   ├── editor/         # Monaco, File Explorer, Command Palette
-│   │   ├── layout/         # Sidebar, TopBar, Dashboard
-│   │   ├── preview/        # Live Preview panel
-│   │   └── ui/             # GlassPanel, NeonButton
-│   ├── data/               # Sample project files
-│   ├── services/           # AI, Cloud Factory, Bug Fix services
-│   ├── stores/             # Zustand state (editor, agents, cloud, UI)
-│   ├── theme/              # DeVibe theme tokens
-│   └── types/              # TypeScript interfaces
-├── cloud/
-│   ├── aws/                # AWS Terraform (Lambda, RDS, S3, CloudWatch)
-│   └── gcp/                # GCP Terraform (Cloud Run, Cloud SQL, GCS)
-├── docs/
-│   └── PRD.md              # Product Requirements Document
-└── scripts/
-    └── demo.sh             # Interactive demo script
+│   └── (drawer)/           # Drawer navigation screens
+│       ├── index.tsx       # Home dashboard (DeVibe style)
+│       ├── workspace.tsx   # Monaco Editor + Preview + AI Chat
+│       ├── agents.tsx      # Multi-agent team
+│       ├── cloud.tsx       # Cloud Factory & deploy
+│       └── ...
+├── components/
+│   ├── ui/                 # GlassCard, GlowButton, NeonOrb
+│   ├── layout/             # TopBar, DrawerContent
+│   ├── home/               # Dashboard sections
+│   ├── workspace/          # Monaco, FileExplorer, AgentChat
+│   └── right-panel/        # Credits, Activity, Usage chart
+├── stores/                 # Zustand state management
+├── constants/              # Theme, sample projects
+├── infra/terraform/        # AWS & GCP Terraform modules
+└── docs/PRD.md             # Product requirements
 ```
 
-## AI Agent Demo Prompts
+## Demo Script
 
-Try these in the Agent Chat sidebar:
+1. **Home Dashboard** — Open the app, see the DeVibe greeting, neon orb, and quick action chips
+2. **AI Prompt** — Type "Build a SaaS landing page" in the hero input or floating chat bar
+3. **Workspace** — Navigate to Workspace via drawer or tap a project
+4. **Monaco Editor** — Switch to Editor tab, edit TypeScript with purple syntax theme
+5. **File Explorer** — Browse project files in the Files tab
+6. **AI Chat** — Switch to AI Chat tab, ask "Fix production bug" → get a code patch → tap Apply
+7. **Live Preview** — Switch to Preview tab, see the rendered app preview
+8. **Command Palette** — Tap the ⌘ floating button or search bar shortcut
+9. **Cloud Factory** — Open Cloud Factory, toggle AWS/GCP, review resources, deploy
+10. **Right Panel** — Tap panel icon for credits ring, active agents, activity timeline
 
-| Prompt | Agent | Result |
-|--------|-------|--------|
-| "Add a dark mode toggle to App.tsx" | Frontend | Edits App.tsx with theme toggle |
-| "Enhance Button with glow effects" | Frontend | Adds neon shadow to Button.tsx |
-| "Generate AWS terraform" | Cloud DevOps | Creates production infrastructure |
-| "Fix the auth null reference bug" | QA | Patches useAuth.ts with null guard |
-| "Add retry logic to the API" | Backend | Adds exponential backoff to api.ts |
+## Configuration
+
+Add API keys in **Settings** (drawer → Settings):
+
+- OpenAI API Key
+- Anthropic API Key
+- Supabase URL & Anon Key
 
 ## Cloud Infrastructure
 
-Pre-built Terraform templates for production scale (100k+ users):
+Pre-built Terraform modules for production scale:
 
-**AWS** (`cloud/aws/`):
-- VPC with 3 AZs
-- Lambda API (auto-scale 10–1000)
-- Aurora PostgreSQL Serverless v2
-- S3 with Glacier lifecycle
-- CloudWatch + X-Ray + SNS alerts
+```bash
+# AWS
+cd infra/terraform/aws
+terraform init && terraform plan
 
-**GCP** (`cloud/gcp/`):
-- Cloud Run (2–100 instances)
-- Cloud SQL PostgreSQL HA
-- GCS with Archive lifecycle
-- Cloud Monitoring alerts
+# GCP
+cd infra/terraform/gcp
+terraform init && terraform plan
+```
+
+Includes: auto-scaling compute, HA databases with read replicas, CDN-backed storage, and monitoring alerts.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Expo SDK 57 + React Native 0.86 |
-| Language | TypeScript |
-| Editor | Monaco Editor (web + WebView) |
-| UI | NativeWind/Tailwind, Lucide icons |
+| Category | Technology |
+|----------|-----------|
+| Framework | Expo SDK 57 + TypeScript |
+| Editor | Monaco Editor 0.52 (WebView) |
+| UI | NativeWind 4, expo-blur, Reanimated 3 |
 | State | Zustand + TanStack Query |
-| Navigation | expo-router |
-| Backend (planned) | Supabase |
-| AI (planned) | OpenAI / Anthropic / Gemini |
+| Icons | Lucide React Native |
+| Navigation | Expo Router + Drawer |
 
-## Environment Variables
+## Expo to Production
 
-Create a `.env` file for production AI integration:
+DeVibe Cloud Mobile helps bridge the gap from Expo development to production:
 
-```env
-EXPO_PUBLIC_API_URL=https://your-api.example.com
-EXPO_PUBLIC_OPENAI_API_KEY=sk-...
-EXPO_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-```
-
-## Scalability
-
-See [docs/PRD.md](docs/PRD.md) for the full scalability section covering:
-- Auto-scaling compute (Lambda / Cloud Run)
-- Managed PostgreSQL with read replicas
-- Object storage with lifecycle policies
-- Observability and alerting
-- Cost optimization for 100k+ MAU
+1. **EAS Build** — Pre-configured `eas.json` in sample projects
+2. **Cloud Infra** — Generate Terraform for your backend
+3. **One-Click Deploy** — Deploy to EAS, Vercel, AWS, or GCP from Cloud Factory
+4. **Bug Fixing** — AI agents diagnose and patch production issues
+5. **Scale** — Auto-scaling, monitoring, and cost-optimized storage for 100k+ users
 
 ## License
 

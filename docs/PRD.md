@@ -1,139 +1,146 @@
-# VibeCursor Pro — Product Requirements Document
+# DeVibe Cloud Mobile — Product Requirements Document
 
-## 1. Overview
+## Overview
 
-**VibeCursor Pro** is a mobile-first AI coding companion built with Expo (React Native). It brings the VS Code + Cursor experience to iPhone (iOS-first, Android-compatible), enabling developers to vibe code, fix production bugs, generate cloud infrastructure, and deploy — all from their phone.
+**DeVibe Cloud Mobile** is the DeVibe mobile companion that brings the VS Code + Cursor experience to iPhone (iOS-first, Android compatible). It targets developers building production-ready Expo (React Native) apps who need deep AI agent integration, Monaco Editor power, and scalable cloud infrastructure generation.
 
-## 2. Goals
+## Problem Statement
 
-| Priority | Goal |
-|----------|------|
-| P0 | Full Monaco Editor with Cursor-style multi-agent AI editing |
-| P0 | DeVibe-matching dark neon UI (purple #A855F7, electric blue accents, glassmorphism) |
-| P1 | Scalable cloud infrastructure generation (AWS + GCP Terraform) |
-| P1 | Production bug fixing from cloud logs → Monaco patches |
-| P2 | One-click deploy to Vercel, AWS, GCP |
+Mobile developers lack a native, production-grade coding environment with:
+- Full Monaco Editor (VS Code engine) on mobile
+- Cursor-style multi-agent AI that edits code in real-time
+- Integrated path from Expo development to production deployment
+- Cloud infrastructure generation for apps scaling to 100k+ users
 
-## 3. User Personas
+## Target Users
 
-- **Mobile-first developer** — codes on commute, wants full IDE power on phone
-- **Indie hacker** — needs AI to scaffold apps + cloud infra quickly
-- **On-call engineer** — receives alerts, needs to diagnose and patch from mobile
+- Solo developers and indie hackers building Expo apps
+- Teams needing mobile-first vibe coding workflows
+- Developers transitioning from prototype to production scale
 
-## 4. Core Features
+## Core Features
 
-### 4.1 Monaco Editor Integration
-- VS Code engine via `@monaco-editor/react` (web) and WebView (iOS/Android)
-- Syntax highlighting, IntelliSense, multi-file tabs, custom `vibecursor-dark` theme
-- File explorer with folder tree
-- Command palette (⌘K / Ctrl+K)
+### 1. Monaco Editor Integration (P0)
+- Full Monaco Editor via WebView with DeVibe dark neon theme
+- Syntax highlighting, IntelliSense-ready structure, multi-file editing
+- Custom `devibe-dark` theme matching purple (#A855F7) accents
+- File explorer with project tree navigation
 
-### 4.2 Cursor Mobile AI
-- Natural language chat sidebar with 6 specialized agents:
+### 2. DeVibe Cloud AI (P0)
+- Natural language chat with multi-agent team:
   - Orchestrator, Frontend, Backend, Cloud DevOps, QA, Security
-- Real-time code edits applied to Monaco
-- Structured tool-calling architecture (extensible to OpenAI/Anthropic/Gemini APIs)
-- Activity feed tracking all agent actions
+- Real-time code patches applied to Monaco editor
+- Context-aware responses for bugs, features, and deployment
 
-### 4.3 Scalable Cloud Factory
-- Describe app → generate Terraform for AWS or GCP
-- Includes: auto-scaling compute, managed PostgreSQL, object storage, observability, alerting
-- Cost estimates for 100k+ MAU scale
+### 3. DeVibe UI/UX (P0)
+- Dark futuristic purple/blue neon theme
+- Glassmorphism panels with `expo-blur`
+- Animated neon orb hero, glowing buttons, credit ring widget
+- Mobile-adapted drawer navigation + slide-over right panel
+- Floating chat bar (Cursor-style ⌘ interaction)
 
-### 4.4 Production Bug Fixing Suite
-- Ingest bugs from CloudWatch, Datadog, etc.
-- AI diagnosis with stack trace analysis
-- Auto-generate patches in Monaco with deployment safety notes
+### 4. Live Preview & Deploy (P1)
+- WebView live preview with browser chrome
+- Preview / Code / Deploy tabs
+- One-click deploy to EAS, Vercel, AWS, GCP
 
-### 4.5 Live Preview & Deploy
-- Expo preview panel for mobile
-- Web preview on desktop
-- Deploy targets: Vercel, AWS, GCP
+### 5. Scalable Cloud Factory (P1)
+- Terraform generation for AWS and GCP
+- Auto-scaling compute (Lambda/Cloud Run)
+- Managed databases with read replicas (RDS/Cloud SQL)
+- Object storage with CDN (S3+CloudFront / GCS+Cloud CDN)
+- Monitoring & alerting (CloudWatch/Stackdriver)
 
-## 5. UI/UX — DeVibe Aesthetic
+### 6. Production Bug Fixing Suite (P1)
+- Simulated log analysis workflow
+- AI-generated patches with one-tap apply
+- Safe deployment plan recommendations
 
-| Element | Specification |
-|---------|---------------|
-| Background | `#030712` (void), `#0a0f1e` (abyss) |
-| Accent | Purple `#A855F7`, Blue `#3B82F6`, Cyan `#00F0FF` |
-| Panels | Glassmorphism: `rgba(17, 24, 39, 0.72)` + subtle borders |
-| Glow | Purple/blue box-shadow on active elements |
-| Layout | Left sidebar nav → Top bar → Main (editor + preview + chat) → Right panel |
+## Technical Architecture
 
-## 6. Tech Stack
+| Layer | Technology |
+|-------|-----------|
+| Framework | Expo SDK 57 + TypeScript |
+| Navigation | Expo Router + Drawer |
+| UI | NativeWind 4 + expo-blur + expo-linear-gradient |
+| Editor | Monaco Editor 0.52 via react-native-webview |
+| State | Zustand + TanStack Query |
+| Icons | Lucide React Native |
+| Animation | Reanimated 3 |
+| Backend (planned) | Supabase (auth, realtime, storage) |
+| AI (planned) | OpenAI/Anthropic/Gemini with tool calling |
 
-- **Framework:** Expo SDK 57 + TypeScript + expo-router
-- **Editor:** Monaco Editor (web + WebView)
-- **UI:** NativeWind/Tailwind, Lucide icons, Reanimated 3
-- **State:** Zustand + TanStack Query
-- **Backend (planned):** Supabase (auth, realtime, storage)
-- **AI (planned):** OpenAI / Anthropic / Gemini with structured outputs
-- **Cloud:** AWS SDK + GCP libraries, Terraform generation
+## Scalability Section
 
-## 7. Scalability Architecture (100k+ Users)
+### Target: 100k+ Concurrent Users
 
-### 7.1 Compute
-- **AWS:** Lambda with provisioned concurrency (10–1000), X-Ray tracing
-- **GCP:** Cloud Run with min 2 / max 100 instances
+#### Compute
+- **AWS**: Lambda with provisioned concurrency, auto-scaling 2–100 instances
+- **GCP**: Cloud Run with min 2 / max 100 instances, 2 vCPU / 1Gi memory
 
-### 7.2 Database
-- **AWS:** Aurora PostgreSQL Serverless v2 (2–64 ACU auto-scale)
-- **GCP:** Cloud SQL PostgreSQL HA with read replicas
+#### Database
+- **AWS**: RDS PostgreSQL Multi-AZ + read replica
+- **GCP**: Cloud SQL Regional HA with query insights
+- Connection pooling, read/write splitting at application layer
 
-### 7.3 Storage
-- **AWS S3:** Lifecycle policies → Glacier after 90 days
-- **GCP GCS:** Archive class transition, versioning enabled
+#### Storage
+- **AWS**: S3 versioning + CloudFront CDN
+- **GCP**: GCS with lifecycle rules (Standard → Nearline → Coldline)
+- Cost optimization through tiered storage policies
 
-### 7.4 Observability
-- CloudWatch dashboards + SNS alerts (AWS)
-- Cloud Monitoring + email notification channels (GCP)
-- Error rate alarms with 5xx threshold
+#### Observability
+- CloudWatch / Stackdriver error rate alarms
+- Lambda 5xx threshold alerts
+- Cloud Run request error monitoring
+- Production bug fixing workflow triggered by alert thresholds
 
-### 7.5 Cost Optimization
-- Serverless compute (pay-per-use)
-- S3/GCS lifecycle archiving
-- Aurora/Cloud SQL auto-scaling bounds
-- Estimated: $380–$1,200/month at 100k MAU
+#### Cost Optimization
+- Auto-scaling min/max bounds
+- Storage lifecycle policies
+- CDN caching for static assets
+- Read replicas for query offloading
 
-### 7.6 Bug Fixing Workflow
-1. Cloud logs ingested → bug report created
-2. QA Agent analyzes stack trace
-3. Patch generated in Monaco
-4. User reviews diff → deploy via safe rollout plan
+## Example Workflows
 
-## 8. Example Workflows
+### Bug Fixing Workflow
+1. User: "Fix the auth race condition in production"
+2. QA Agent analyzes simulated production logs
+3. Patch generated for `app/index.tsx` with error boundaries
+4. User taps "Apply patch" → Monaco editor updates
+5. Deploy via EAS or cloud target
 
-### New Feature
-1. Open Agent Chat → "Add dark mode toggle to App.tsx"
-2. Frontend Agent edits file in Monaco
-3. Live Preview updates
-4. Deploy to Vercel preview
+### New Feature Workflow
+1. User: "Add a dark mode toggle"
+2. Frontend Agent scaffolds component with DeVibe styling
+3. Code appears in file explorer + Monaco editor
+4. Live preview refreshes automatically
+5. Cloud Agent prepares infra if backend changes needed
 
-### Bug Fix
-1. Navigate to Bug Fix Suite
-2. Select "NullReference in useAuth hook"
-3. Click "Auto-fix with AI"
-4. QA Agent patches `useAuth.ts` with null guard
-5. Deploy to AWS Production
+### Cloud Generation Workflow
+1. User navigates to Cloud Factory
+2. Selects AWS or GCP provider
+3. Reviews generated Terraform (in `infra/terraform/`)
+4. Applies infrastructure with auto-scaling + monitoring
+5. Deploys app to selected target
 
-### Cloud Generation
-1. Navigate to Cloud Factory
-2. Select AWS, describe: "Social app with chat and media uploads"
-3. Cloud DevOps Agent generates Terraform
-4. Review resources and estimated cost
-5. Deploy infrastructure
+## Success Metrics
 
-## 9. Success Metrics
+- Time from prompt to working Expo project < 5 minutes
+- Monaco editor load time < 3 seconds on iPhone 14+
+- AI patch apply success rate > 90%
+- Infrastructure generation covers 80% of common production patterns
 
-- Time from prompt to working code edit < 5 seconds
-- Monaco editor load time < 2 seconds on iPhone 14+
-- Cloud infra generation < 30 seconds
-- Bug diagnosis accuracy > 85% (with production AI APIs)
+## Roadmap
 
-## 10. Future Roadmap
+| Phase | Features |
+|-------|----------|
+| v1.0 (current) | DeVibe UI, Monaco, AI chat simulation, Terraform templates |
+| v1.1 | Supabase auth, real AI API integration |
+| v1.2 | EAS build integration, real deploy pipelines |
+| v2.0 | Collaborative editing, team workspaces |
 
-- Supabase auth integration
-- Real OpenAI/Anthropic/Gemini API connections
-- Git push/pull via GitHub API
-- Collaborative multi-user editing
-- Apple Pencil support for inline annotations
+## Out of Scope (v1.0)
+
+- Real-time collaborative editing
+- App Store submission automation
+- On-device LLM inference
