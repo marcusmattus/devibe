@@ -12,6 +12,7 @@ interface EditorState {
   setCommandPaletteOpen: (open: boolean) => void;
   toggleRightPanel: () => void;
   setRightPanelOpen: (open: boolean) => void;
+  toggleEditorTheme: () => void;
 }
 
 export const useEditorStore = create<EditorState>((set) => ({
@@ -26,4 +27,8 @@ export const useEditorStore = create<EditorState>((set) => ({
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
   toggleRightPanel: () => set((s) => ({ rightPanelOpen: !s.rightPanelOpen })),
   setRightPanelOpen: (open) => set({ rightPanelOpen: open }),
+  toggleEditorTheme: () =>
+    set((s) => ({
+      editorTheme: s.editorTheme === "devibe-dark" ? "vs-dark" : "devibe-dark",
+    })),
 }));

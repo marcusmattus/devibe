@@ -18,7 +18,8 @@ import {
   GitBranch,
   Palette,
 } from "lucide-react-native";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { colors, radius } from "../../constants/theme";
 import { useEditorStore } from "../../stores/editorStore";
 import { router } from "expo-router";
@@ -33,9 +34,17 @@ interface Command {
 }
 
 export function CommandPalette() {
+  const insets = useSafeAreaInsets();
   const open = useEditorStore((s) => s.commandPaletteOpen);
   const setOpen = useEditorStore((s) => s.setCommandPaletteOpen);
+  const setWorkspaceTab = useEditorStore((s) => s.setWorkspaceTab);
+  const toggleEditorTheme = useEditorStore((s) => s.toggleEditorTheme);
+  const editorTheme = useEditorStore((s) => s.editorTheme);
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    if (!open) setQuery("");
+  }, [open]);
 
   const commands: Command[] = useMemo(
     () => [
@@ -91,6 +100,7 @@ export function CommandPalette() {
         category: "Actions",
         action: () => {
           setOpen(false);
+          setWorkspaceTab("chat");
           router.push("/workspace");
         },
       },
@@ -100,15 +110,22 @@ export function CommandPalette() {
         description: "Simulated git diff view",
         icon: GitBranch,
         category: "Git",
-        action: () => setOpen(false),
+        action: () => {
+          setOpen(false);
+          setWorkspaceTab("editor");
+          router.push("/workspace");
+        },
       },
       {
         id: "theme",
         label: "Toggle Editor Theme",
-        description: "DeVibe Dark / VS Dark",
+        description: `Current: ${editorTheme === "devibe-dark" ? "DeVibe Dark" : "VS Dark"}`,
         icon: Palette,
         category: "Settings",
-        action: () => setOpen(false),
+        action: () => {
+          toggleEditorTheme();
+          setOpen(false);
+        },
       },
       {
         id: "settings",
@@ -122,7 +139,7 @@ export function CommandPalette() {
         },
       },
     ],
-    [setOpen]
+    [setOpen, setWorkspaceTab, toggleEditorTheme, editorTheme]
   );
 
   const filtered = commands.filter(
@@ -141,7 +158,7 @@ export function CommandPalette() {
           flex: 1,
           backgroundColor: "rgba(0,0,0,0.7)",
           justifyContent: "flex-start",
-          paddingTop: 100,
+          paddingTop: insets.top + 24,
           paddingHorizontal: 20,
         }}
         onPress={() => setOpen(false)}
@@ -188,53 +205,59 @@ export function CommandPalette() {
             </View>
           </View>
 
-          <ScrollView style={{ maxHeight: 400 }}>
-            {categories.map((category) => (
-              <View key={category}>
-                <Text
-                  style={{
-                    color: colors.textMuted,
-                    fontSize: 11,
-                    fontWeight: "600",
-                    textTransform: "uppercase",
-                    letterSpacing: 1,
-                    paddingHorizontal: 16,
-                    paddingTop: 12,
-                    paddingBottom: 6,
-                  }}
-                >
-                  {category}
-                </Text>
-                {filtered
-                  .filter((c) => c.category === category)
-                  .map((cmd) => {
-                    const Icon = cmd.icon;
-                    return (
-                      <TouchableOpacity
-                        key={cmd.id}
-                        onPress={cmd.action}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          paddingHorizontal: 16,
-                          paddingVertical: 12,
-                          gap: 12,
-                        }}
-                      >
-                        <Icon size={18} color={colors.purple} />
-                        <View style={{ flex: 1 }}>
-                          <Text style={{ color: colors.text, fontSize: 15, fontWeight: "500" }}>
-                            {cmd.label}
-                          </Text>
-                          <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
-                            {cmd.description}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    );
-                  })}
-              </View>
-            ))}
+          <ScrollView style={{ maxHeight: 400 }} keyboardShouldPersistTaps="handled">
+            {filtered.length === 0 ? (
+              <Text style={{ color: colors.textMuted, padding: 16, textAlign: "center" }}>
+                No commands found
+              </Text>
+            ) : (
+              categories.map((category) => (
+                <View key={category}>
+                  <Text
+                    style={{
+                      color: colors.textMuted,
+                      fontSize: 11,
+                      fontWeight: "600",
+                      textTransform: "uppercase",
+                      letterSpacing: 1,
+                      paddingHorizontal: 16,
+                      paddingTop: 12,
+                      paddingBottom: 6,
+                    }}
+                  >
+                    {category}
+                  </Text>
+                  {filtered
+                    .filter((c) => c.category === category)
+                    .map((cmd) => {
+                      const Icon = cmd.icon;
+                      return (
+                        <TouchableOpacity
+                          key={cmd.id}
+                          onPress={cmd.action}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            paddingHorizontal: 16,
+                            paddingVertical: 12,
+                            gap: 12,
+                          }}
+                        >
+                          <Icon size={18} color={colors.purple} />
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ color: colors.text, fontSize: 15, fontWeight: "500" }}>
+                              {cmd.label}
+                            </Text>
+                            <Text style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
+                              {cmd.description}
+                            </Text>
+                          </View>
+                        </TouchableOpacity>
+                      );
+                    })}
+                </View>
+              ))
+            )}
           </ScrollView>
         </Pressable>
       </Pressable>

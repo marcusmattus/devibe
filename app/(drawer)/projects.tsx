@@ -4,8 +4,9 @@ import { Plus, FolderKanban } from "lucide-react-native";
 import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TopBar } from "../../components/layout/TopBar";
+import { GlassCard } from "../../components/ui/GlassCard";
 import { GlowButton } from "../../components/ui/GlowButton";
-import { colors, radius } from "../../constants/theme";
+import { colors, gradients, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
 import { useEditorStore } from "../../stores/editorStore";
 import { router } from "expo-router";
@@ -25,7 +26,7 @@ export default function ProjectsScreen() {
   const setCommandPaletteOpen = useEditorStore((s) => s.setCommandPaletteOpen);
 
   return (
-    <LinearGradient colors={["#0F0F1A", "#0A0A0F"]} style={{ flex: 1 }}>
+    <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
       <TopBar
         greeting="Projects"
         subtitle={`${projects.length} active projects`}
@@ -50,44 +51,47 @@ export default function ProjectsScreen() {
               setActiveProject(project);
               router.push("/workspace");
             }}
-            style={{
-              backgroundColor: colors.card,
-              borderRadius: radius.lg,
-              borderWidth: 1,
-              borderColor: colors.border,
-              padding: 16,
-              marginBottom: 12,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 14,
-            }}
+            style={{ marginBottom: 12 }}
           >
-            <View
-              style={{
-                width: 48,
-                height: 48,
-                borderRadius: radius.md,
-                backgroundColor: "rgba(168, 85, 247, 0.15)",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <FolderKanban size={24} color={colors.purple} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={{ color: colors.text, fontWeight: "600", fontSize: 16 }}>{project.name}</Text>
-              <Text style={{ color: colors.textMuted, fontSize: 13, marginTop: 2 }}>
-                {project.type} · {project.updatedAt}
-              </Text>
-            </View>
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                backgroundColor: STATUS_COLORS[project.status],
-              }}
-            />
+            <GlassCard>
+              <View
+                style={{
+                  padding: 16,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 14,
+                }}
+              >
+                <View
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: radius.md,
+                    backgroundColor: "rgba(168, 85, 247, 0.15)",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <FolderKanban size={24} color={colors.purple} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.text, fontWeight: "600", fontSize: 16 }}>
+                    {project.name}
+                  </Text>
+                  <Text style={{ color: colors.textMuted, fontSize: 13, marginTop: 2 }}>
+                    {project.type} · {project.updatedAt}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    backgroundColor: STATUS_COLORS[project.status],
+                  }}
+                />
+              </View>
+            </GlassCard>
           </TouchableOpacity>
         ))}
       </ScrollView>
