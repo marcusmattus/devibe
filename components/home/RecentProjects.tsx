@@ -1,7 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { colors, radius } from "../../constants/theme";
+import { colors } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
 import { router } from "expo-router";
+import { GlassCard } from "../ui/GlassCard";
 
 const STATUS_COLORS = {
   deployed: colors.green,
@@ -24,15 +25,7 @@ export function RecentProjects() {
       <Text style={{ color: colors.text, fontSize: 18, fontWeight: "700", marginBottom: 12 }}>
         Recent Projects
       </Text>
-      <View
-        style={{
-          backgroundColor: colors.card,
-          borderRadius: radius.lg,
-          borderWidth: 1,
-          borderColor: colors.border,
-          overflow: "hidden",
-        }}
-      >
+      <GlassCard>
         {projects.map((project, index) => (
           <TouchableOpacity
             key={project.id}
@@ -71,7 +64,7 @@ export function RecentProjects() {
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+      </GlassCard>
     </View>
   );
 }

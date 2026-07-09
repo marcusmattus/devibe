@@ -1,6 +1,7 @@
 import { View, ScrollView, Modal, Pressable, Dimensions } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors } from "../../constants/theme";
+import { colors, gradients } from "../../constants/theme";
 import { useEditorStore } from "../../stores/editorStore";
 import { CreditsWidget } from "./CreditsWidget";
 import { ActiveAgents } from "./ActiveAgents";
@@ -24,13 +25,16 @@ export function RightPanel() {
         <Pressable
           style={{
             width: PANEL_WIDTH,
-            backgroundColor: colors.bg,
             borderLeftWidth: 1,
             borderLeftColor: colors.border,
-            paddingTop: insets.top,
+            overflow: "hidden",
           }}
           onPress={(e) => e.stopPropagation()}
         >
+          <LinearGradient
+            colors={[...gradients.screen]}
+            style={{ flex: 1, paddingTop: insets.top }}
+          >
           <ScrollView
             contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 16 }}
             showsVerticalScrollIndicator={false}
@@ -40,6 +44,7 @@ export function RightPanel() {
             <RecentActivity />
             <UsageChart />
           </ScrollView>
+          </LinearGradient>
         </Pressable>
       </Pressable>
     </Modal>

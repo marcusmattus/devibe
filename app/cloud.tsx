@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Cloud, Server, Database, HardDrive, Activity, Rocket } from "lucide-react-native";
-import { TopBar } from "../../components/layout/TopBar";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { GlowButton } from "../../components/ui/GlowButton";
-import { colors, radius } from "../../constants/theme";
-import { useCloudStore } from "../../stores/cloudStore";
+import { TopBar } from "../components/layout/TopBar";
+import { GlassCard } from "../components/ui/GlassCard";
+import { GlowButton } from "../components/ui/GlowButton";
+import { colors, gradients, radius } from "../constants/theme";
+import { useCloudStore } from "../stores/cloudStore";
 
 const RESOURCE_ICONS = {
   compute: Server,
@@ -23,11 +23,15 @@ export default function CloudScreen() {
   const resources = useCloudStore((s) => s.resources);
   const deployTargets = useCloudStore((s) => s.deployTargets);
   const selectedProvider = useCloudStore((s) => s.selectedProvider);
+  const terraformStatus = useCloudStore((s) => s.terraformStatus);
   const setSelectedProvider = useCloudStore((s) => s.setSelectedProvider);
   const deploy = useCloudStore((s) => s.deploy);
+  const generateTerraform = useCloudStore((s) => s.generateTerraform);
+
+  const filteredResources = resources.filter((r) => r.provider === selectedProvider);
 
   return (
-    <LinearGradient colors={["#0F0F1A", "#0A0A0F"]} style={{ flex: 1 }}>
+    <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
       <TopBar
         greeting="Cloud Factory"
         subtitle="Production infrastructure at scale"
@@ -68,24 +72,40 @@ export default function CloudScreen() {
         </View>
 
         <GlowButton
-          title="Generate Terraform Infrastructure"
-          onPress={() => {}}
+          title={
+            terraformStatus === "generating"
+              ? "Generating Terraform..."
+              : terraformStatus === "done"
+                ? "Terraform Ready ✓"
+                : "Generate Terraform Infrastructure"
+          }
+          onPress={() => generateTerraform()}
+          disabled={terraformStatus === "generating"}
           style={{ marginBottom: 20 }}
         />
 
         <Text style={{ color: colors.text, fontWeight: "600", fontSize: 16, marginBottom: 12 }}>
-          Cloud Resources
+          Cloud Resources ({selectedProvider.toUpperCase()})
         </Text>
-        {resources
-          .filter((r) => r.provider === selectedProvider || selectedProvider === "aws")
-          .map((resource) => {
+        {filteredResources.length === 0 ? (
+          <GlassCard style={{ marginBottom: 10 }}>
+            <View style={{ padding: 16, alignItems: "center" }}>
+              <Text style={{ color: colors.textMuted, textAlign: "center" }}>
+                No resources yet. Generate Terraform to provision infrastructure.
+              </Text>
+            </View>
+          </GlassCard>
+        ) : (
+          filteredResources.map((resource) => {
             const Icon = RESOURCE_ICONS[resource.type];
             return (
               <GlassCard key={resource.id} style={{ marginBottom: 10 }}>
                 <View style={{ padding: 14, flexDirection: "row", alignItems: "center", gap: 12 }}>
                   <Icon size={20} color={colors.purple} />
                   <View style={{ flex: 1 }}>
-                    <Text style={{ color: colors.text, fontWeight: "500", fontSize: 14 }}>{resource.name}</Text>
+                    <Text style={{ color: colors.text, fontWeight: "500", fontSize: 14 }}>
+                      {resource.name}
+                    </Text>
                     <Text style={{ color: colors.textMuted, fontSize: 12 }}>{resource.cost}</Text>
                   </View>
                   <View
@@ -99,7 +119,8 @@ export default function CloudScreen() {
                 </View>
               </GlassCard>
             );
-          })}
+          })
+        )}
 
         <Text style={{ color: colors.text, fontWeight: "600", fontSize: 16, marginTop: 20, marginBottom: 12 }}>
           Deploy Targets
@@ -111,7 +132,9 @@ export default function CloudScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontWeight: "500", fontSize: 14 }}>{target.name}</Text>
                 {target.url && (
-                  <Text style={{ color: colors.textMuted, fontSize: 11, marginTop: 2 }}>{target.url}</Text>
+                  <Text style={{ color: colors.textMuted, fontSize: 11, marginTop: 2 }} numberOfLines={1}>
+                    {target.url}
+                  </Text>
                 )}
               </View>
               <TouchableOpacity
