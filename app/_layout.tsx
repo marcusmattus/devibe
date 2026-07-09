@@ -25,6 +25,8 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <StatusBar style="light" />
         <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#0A0A0F" } }}>
+          <Stack.Screen name="index" options={{ animation: "fade" }} />
+          <Stack.Screen name="login" options={{ animation: "fade" }} />
           <Stack.Screen name="(drawer)" />
         </Stack>
         <CommandPalette />

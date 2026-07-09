@@ -26,7 +26,8 @@ import type { GitHubRepo } from "../../lib/github/types";
 export default function RepositoriesScreen() {
   const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
-  const user = useAuthStore((s) => s.accessToken);
+  const hasGitHub = useAuthStore((s) => !!s.accessToken);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const importGitHubRepo = useProjectStore((s) => s.importGitHubRepo);
   const accessToken = useAuthStore((s) => s.accessToken);
   const authUser = useAuthStore((s) => s.user);
@@ -72,7 +73,13 @@ export default function RepositoriesScreen() {
     <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
       <TopBar
         greeting="Repositories"
-        subtitle={user ? "Agentic scoped access to your GitHub repos" : "Sign in to access your repos"}
+        subtitle={
+          hasGitHub
+            ? "Agentic scoped access to your GitHub repos"
+            : isAuthenticated
+              ? "Connect GitHub for repository access"
+              : "Sign in to access your repos"
+        }
         showSearch={false}
         onMenuPress={openDrawer}
       />
@@ -80,7 +87,7 @@ export default function RepositoriesScreen() {
         contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}
         showsVerticalScrollIndicator={false}
         refreshControl={
-          user ? (
+          hasGitHub ? (
             <RefreshControl
               refreshing={isRefetching}
               onRefresh={() => refetch()}
@@ -91,7 +98,7 @@ export default function RepositoriesScreen() {
       >
         <GitHubConnectCard />
 
-        {user && (
+        {hasGitHub && (
           <>
             <Text
               style={{

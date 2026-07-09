@@ -2,6 +2,7 @@ import { View, Text, ScrollView, Switch, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Shield, Clock, Smartphone, Globe, XCircle } from "lucide-react-native";
+import { router } from "expo-router";
 import { useOpenDrawer } from "../../hooks/useOpenDrawer";
 import { TopBar } from "../../components/layout/TopBar";
 import { GlassCard } from "../../components/ui/GlassCard";
@@ -19,7 +20,8 @@ import {
 export default function AccessControlScreen() {
   const openDrawer = useOpenDrawer();
   const insets = useSafeAreaInsets();
-  const isSignedIn = useAuthStore((s) => !!s.accessToken);
+  const isSignedIn = useAuthStore((s) => s.isAuthenticated && s.authProvider !== "guest");
+  const hasGitHub = useAuthStore((s) => !!s.accessToken);
   const signOut = useAuthStore((s) => s.signOut);
   const sessions = useAgenticAuthStore((s) => s.sessions);
   const revokeSession = useAgenticAuthStore((s) => s.revokeSession);
@@ -33,6 +35,7 @@ export default function AccessControlScreen() {
   const handleSignOut = async () => {
     if (user) await revokeAllSessions(user.login);
     await signOut();
+    router.replace("/login");
   };
 
   return (
@@ -47,7 +50,7 @@ export default function AccessControlScreen() {
         contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <GitHubConnectCard showTokenFallback />
+        <GitHubConnectCard showTokenFallback={hasGitHub} />
 
         {isSignedIn && (
           <>
@@ -200,7 +203,7 @@ export default function AccessControlScreen() {
             <AuditLogList limit={15} />
 
             <GlowButton
-              title="Sign Out of GitHub"
+              title="Sign Out"
               variant="secondary"
               onPress={handleSignOut}
               style={{ marginTop: 24 }}

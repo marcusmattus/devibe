@@ -48,6 +48,8 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
   const projects = useProjectStore((s) => s.projects);
   const setActiveProject = useProjectStore((s) => s.setActiveProject);
   const authUser = useAuthStore((s) => s.user);
+  const appProfile = useAuthStore((s) => s.appProfile);
+  const displayUser = appProfile ?? (authUser ? { name: authUser.name ?? authUser.login, email: authUser.login, avatarUrl: authUser.avatar_url } : null);
   const favorites = projects.slice(0, 3);
 
   const openProject = (projectId: string) => {
@@ -198,17 +200,36 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
             gap: 12,
           }}
         >
-          {authUser ? (
+          {displayUser && displayUser.name !== "Guest" ? (
             <>
-              <Image
-                source={{ uri: authUser.avatar_url }}
-                style={{ width: 40, height: 40, borderRadius: 20 }}
-              />
+              {displayUser.avatarUrl ? (
+                <Image
+                  source={{ uri: displayUser.avatarUrl }}
+                  style={{ width: 40, height: 40, borderRadius: 20 }}
+                />
+              ) : (
+                <LinearGradient
+                  colors={[...gradients.purpleBlue]}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ color: "#FFF", fontWeight: "700" }}>
+                    {displayUser.name.charAt(0).toUpperCase()}
+                  </Text>
+                </LinearGradient>
+              )}
               <View style={{ flex: 1 }}>
                 <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>
-                  {authUser.name ?? authUser.login}
+                  {displayUser.name}
                 </Text>
-                <Text style={{ color: colors.textMuted, fontSize: 12 }}>@{authUser.login}</Text>
+                <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+                  {displayUser.email || "Connected"}
+                </Text>
               </View>
               <TouchableOpacity onPress={() => navigation.navigate("repositories")}>
                 <ChevronRight size={16} color={colors.textMuted} />

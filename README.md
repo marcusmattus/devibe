@@ -90,6 +90,22 @@ npm run web
 
 Scan the QR code with Expo Go on your iPhone to test on device.
 
+### Splash & Login
+
+On launch, the app shows a **DeVibe splash screen** (animated logo + neon progress bar), then routes to the **login gateway** if not signed in.
+
+Sign-in options:
+- **GitHub** — Device flow OAuth for repo access
+- **Stripe** — Connect OAuth for payments & billing (demo mode without client ID)
+- **Email** — Email/password sign-in
+- **Continue without signing in** — Guest mode
+
+```bash
+# Optional Stripe Connect
+EXPO_PUBLIC_STRIPE_CLIENT_ID=ca_...
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+```
+
 ### Type Check
 
 ```bash
