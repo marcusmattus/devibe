@@ -1,11 +1,11 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Workflow, Rocket, Bug, Sparkles, Cloud, GitBranch } from "lucide-react-native";
-import { TopBar } from "../../components/layout/TopBar";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { colors, gradients, radius } from "../../constants/theme";
+import { TopBar } from "../components/layout/TopBar";
+import { GlassCard } from "../components/ui/GlassCard";
+import { colors, gradients, radius } from "../constants/theme";
 import { router } from "expo-router";
 
 const WORKFLOWS = [

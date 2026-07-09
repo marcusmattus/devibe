@@ -1,13 +1,13 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Cloud, Server, Database, HardDrive, Activity, Rocket } from "lucide-react-native";
-import { TopBar } from "../../components/layout/TopBar";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { GlowButton } from "../../components/ui/GlowButton";
-import { colors, gradients, radius } from "../../constants/theme";
-import { useCloudStore } from "../../stores/cloudStore";
+import { TopBar } from "../components/layout/TopBar";
+import { GlassCard } from "../components/ui/GlassCard";
+import { GlowButton } from "../components/ui/GlowButton";
+import { colors, gradients, radius } from "../constants/theme";
+import { useCloudStore } from "../stores/cloudStore";
 
 const RESOURCE_ICONS = {
   compute: Server,

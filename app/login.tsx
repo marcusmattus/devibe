@@ -5,10 +5,10 @@ import { useAuthStore } from "../stores/authStore";
 export default function LoginScreen() {
   return (
     <LoginGateway
-      onSuccess={() => router.replace("/(drawer)")}
+      onSuccess={() => router.replace("/(tabs)")}
       onSkip={async () => {
         await useAuthStore.getState().continueAsGuest();
-        router.replace("/(drawer)");
+        router.replace("/(tabs)");
       }}
     />
   );

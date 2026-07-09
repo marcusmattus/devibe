@@ -3,19 +3,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Shield, Clock, Smartphone, Globe, XCircle } from "lucide-react-native";
 import { router } from "expo-router";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
-import { TopBar } from "../../components/layout/TopBar";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { GlowButton } from "../../components/ui/GlowButton";
-import { GitHubConnectCard } from "../../components/github/GitHubConnectCard";
-import { AuditLogList } from "../../components/agentic/AuditLogList";
-import { colors, gradients, radius } from "../../constants/theme";
-import { useAuthStore } from "../../stores/authStore";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
+import { TopBar } from "../components/layout/TopBar";
+import { GlassCard } from "../components/ui/GlassCard";
+import { GlowButton } from "../components/ui/GlowButton";
+import { GitHubConnectCard } from "../components/github/GitHubConnectCard";
+import { AuditLogList } from "../components/agentic/AuditLogList";
+import { colors, gradients, radius } from "../constants/theme";
+import { useAuthStore } from "../stores/authStore";
 import {
   useAgenticAuthStore,
   formatSessionExpiry,
   isSessionExpired,
-} from "../../stores/agenticAuthStore";
+} from "../stores/agenticAuthStore";
 
 export default function AccessControlScreen() {
   const openDrawer = useOpenDrawer();

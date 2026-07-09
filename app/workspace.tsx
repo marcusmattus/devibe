@@ -1,18 +1,18 @@
 import { View, Text, TouchableOpacity, useWindowDimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Code2, Eye, MessageSquare, FolderTree } from "lucide-react-native";
-import { TopBar } from "../../components/layout/TopBar";
-import { MonacoEditor } from "../../components/workspace/MonacoEditor";
-import { FileExplorer } from "../../components/workspace/FileExplorer";
-import { LivePreview } from "../../components/workspace/LivePreview";
-import { AgentChat, AgentTeamBar } from "../../components/workspace/AgentChat";
-import { SessionBadge } from "../../components/agentic/SessionBadge";
-import { CollaborationIndicator } from "../../components/agentic/CollaborationIndicator";
-import { colors, gradients, radius } from "../../constants/theme";
-import { useEditorStore, type WorkspaceTab } from "../../stores/editorStore";
-import { useProjectStore } from "../../stores/projectStore";
+import { TopBar } from "../components/layout/TopBar";
+import { MonacoEditor } from "../components/workspace/MonacoEditor";
+import { FileExplorer } from "../components/workspace/FileExplorer";
+import { LivePreview } from "../components/workspace/LivePreview";
+import { AgentChat, AgentTeamBar } from "../components/workspace/AgentChat";
+import { SessionBadge } from "../components/agentic/SessionBadge";
+import { CollaborationIndicator } from "../components/agentic/CollaborationIndicator";
+import { colors, gradients, radius } from "../constants/theme";
+import { useEditorStore, type WorkspaceTab } from "../stores/editorStore";
+import { useProjectStore } from "../stores/projectStore";
 
 const TABS: {
   id: WorkspaceTab;

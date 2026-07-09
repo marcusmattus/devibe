@@ -11,17 +11,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Github, Lock, Star, GitBranch, FolderGit2 } from "lucide-react-native";
 import { useState } from "react";
 import { router } from "expo-router";
-import { useOpenDrawer } from "../../hooks/useOpenDrawer";
-import { TopBar } from "../../components/layout/TopBar";
-import { GlassCard } from "../../components/ui/GlassCard";
-import { GitHubConnectCard } from "../../components/github/GitHubConnectCard";
-import { AgenticLoginModal } from "../../components/agentic/AgenticLoginModal";
-import { colors, gradients, radius } from "../../constants/theme";
-import { useAuthStore } from "../../stores/authStore";
-import { useGitHubRepos } from "../../hooks/useGitHubRepos";
-import { useProjectStore } from "../../stores/projectStore";
-import { useAgenticAuthStore } from "../../stores/agenticAuthStore";
-import type { GitHubRepo } from "../../lib/github/types";
+import { useOpenDrawer } from "../hooks/useOpenDrawer";
+import { TopBar } from "../components/layout/TopBar";
+import { GlassCard } from "../components/ui/GlassCard";
+import { GitHubConnectCard } from "../components/github/GitHubConnectCard";
+import { AgenticLoginModal } from "../components/agentic/AgenticLoginModal";
+import { colors, gradients, radius } from "../constants/theme";
+import { useAuthStore } from "../stores/authStore";
+import { useGitHubRepos } from "../hooks/useGitHubRepos";
+import { useProjectStore } from "../stores/projectStore";
+import { useAgenticAuthStore } from "../stores/agenticAuthStore";
+import type { GitHubRepo } from "../lib/github/types";
 
 export default function RepositoriesScreen() {
   const openDrawer = useOpenDrawer();

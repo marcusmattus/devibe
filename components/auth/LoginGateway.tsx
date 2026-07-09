@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Github, Mail, Lock, Eye, EyeOff } from "lucide-react-native";
 import { useState } from "react";
 import { BlurView } from "expo-blur";
-import { DeVibeLogo, DeVibeWordmark } from "./DeVibeLogo";
+import { DeVibeLogo, DeVibeBrandName } from "./DeVibeLogo";
 import { colors, radius } from "../../constants/theme";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -77,7 +77,7 @@ export function LoginGateway({ onSuccess, onSkip }: LoginGatewayProps) {
         <View style={styles.header}>
           <DeVibeLogo size={64} />
           <View style={{ marginTop: 16 }}>
-            <DeVibeWordmark fontSize={28} />
+            <DeVibeBrandName fontSize={28} />
           </View>
           <Text style={styles.subtitle}>Sign in to access your projects & repos</Text>
         </View>

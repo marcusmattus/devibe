@@ -37,11 +37,32 @@ export default function AgentsScreen() {
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
         <TopBar
-          greeting="AI Agents"
-          subtitle="Multi-agent team for vibe coding"
+          greeting="Agents"
+          subtitle="Your AI team"
           showSearch={false}
+          showCredits={false}
           onMenuPress={openDrawer}
         />
+
+        <View style={{ flexDirection: "row", paddingHorizontal: 16, marginBottom: 12, gap: 8 }}>
+          {["All", "My Agents", "Templates"].map((tab, i) => (
+            <View
+              key={tab}
+              style={{
+                paddingHorizontal: 14,
+                paddingVertical: 8,
+                borderRadius: radius.full,
+                backgroundColor: i === 0 ? "rgba(123,97,255,0.2)" : colors.card,
+                borderWidth: 1,
+                borderColor: i === 0 ? colors.purpleBrand : colors.border,
+              }}
+            >
+              <Text style={{ color: i === 0 ? colors.purpleBrand : colors.textSecondary, fontSize: 12, fontWeight: "600" }}>
+                {tab}
+              </Text>
+            </View>
+          ))}
+        </View>
 
         <ScrollView
           horizontal
