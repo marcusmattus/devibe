@@ -20,10 +20,12 @@ The DeVibe mobile companion for production Expo apps. A full-featured Expo (Reac
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
-- [Expo Go](https://expo.dev/go) on your iPhone (for development)
+- **[Expo Go](https://expo.dev/go)** from the App Store (supports SDK 54)
 - Xcode (for iOS simulator, macOS only)
+
+> **Note:** This project uses **Expo SDK 54** for compatibility with the App Store version of Expo Go. SDK 57+ requires a development build.
 
 ### Install & Run
 
