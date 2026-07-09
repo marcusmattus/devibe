@@ -8,10 +8,10 @@ import {
   Platform,
 } from "react-native";
 import { Bot, Send, Trash2, Code } from "lucide-react-native";
+import { useRef, useEffect } from "react";
 import { colors, radius } from "../../constants/theme";
 import { useAgentStore } from "../../stores/agentStore";
 import { useProjectStore } from "../../stores/projectStore";
-import { GlowButton } from "../ui/GlowButton";
 
 const AGENT_COLORS: Record<string, string> = {
   orchestrator: colors.purple,
@@ -23,6 +23,7 @@ const AGENT_COLORS: Record<string, string> = {
 };
 
 export function AgentChat() {
+  const scrollRef = useRef<ScrollView>(null);
   const messages = useAgentStore((s) => s.messages);
   const prompt = useAgentStore((s) => s.prompt);
   const isThinking = useAgentStore((s) => s.isThinking);
@@ -32,6 +33,10 @@ export function AgentChat() {
   const clearMessages = useAgentStore((s) => s.clearMessages);
   const updateFileContent = useProjectStore((s) => s.updateFileContent);
 
+  useEffect(() => {
+    scrollRef.current?.scrollToEnd({ animated: true });
+  }, [messages.length, isThinking]);
+
   const applyPatch = (path: string, content: string) => {
     updateFileContent(path, content);
   };
@@ -40,6 +45,7 @@ export function AgentChat() {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : undefined}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
     >
       <View
         style={{
@@ -63,9 +69,11 @@ export function AgentChat() {
       </View>
 
       <ScrollView
+        ref={scrollRef}
         style={{ flex: 1 }}
         contentContainerStyle={{ padding: 16, gap: 16 }}
         showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
       >
         {messages.map((msg) => {
           const agent = agents.find((a) => a.id === msg.agentId);

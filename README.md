@@ -15,15 +15,46 @@ The DeVibe mobile companion for production Expo apps. A full-featured Expo (Reac
 - **Cloud Factory** — Terraform templates for AWS & GCP with auto-scaling, monitoring, and storage
 - **Production Bug Fixing** — AI-driven diagnosis and patch generation workflow
 - **Command Palette** — Cursor-style ⌘K command palette for quick navigation
+- **GitHub Integration** — Sign in with GitHub (device flow or PAT), browse repositories, and import code into the workspace
+
+## GitHub Sign-In
+
+DeVibe Cloud Mobile supports GitHub authentication so you can browse and import your repositories.
+
+### Option A: OAuth Device Flow (recommended)
+
+1. Create a [GitHub OAuth App](https://github.com/settings/developers) (type: OAuth App)
+2. Enable **Device Flow** in the app settings
+3. Copy the **Client ID** and add it to `.env.local`:
+
+```bash
+cp .env.example .env.local
+# Edit .env.local:
+EXPO_PUBLIC_GITHUB_CLIENT_ID=your_client_id
+```
+
+4. Restart the Expo dev server
+5. Open **Repositories** in the drawer → **Sign in with GitHub**
+6. Enter the device code shown in the app on GitHub
+
+### Option B: Personal Access Token
+
+1. Create a [GitHub PAT](https://github.com/settings/tokens) with `repo` and `read:user` scopes
+2. Open **Settings** or **Repositories** → **Use Personal Access Token**
+3. Paste your token and connect
+
+Imported repos appear in **Projects** and open in the **Workspace** with files loaded from the default branch.
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
-- [Expo Go](https://expo.dev/go) on your iPhone (for development)
+- **[Expo Go](https://expo.dev/go)** from the App Store (supports SDK 54)
 - Xcode (for iOS simulator, macOS only)
+
+> **Note:** This project uses **Expo SDK 54** for compatibility with the App Store version of Expo Go. SDK 57+ requires a development build.
 
 ### Install & Run
 

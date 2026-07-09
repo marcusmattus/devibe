@@ -26,6 +26,8 @@ export const gradients = {
   purpleBlue: ["#A855F7", "#3B82F6"] as const,
   card: ["rgba(26,26,40,0.9)", "rgba(18,18,26,0.95)"] as const,
   orb: ["#A855F7", "#7C3AED", "#3B82F6"] as const,
+  screen: ["#0F0F1A", "#0A0A0F", "#1A0A2E"] as const,
+  screenAlt: ["#0F0F1A", "#0A0A0F"] as const,
 };
 
 export const spacing = {

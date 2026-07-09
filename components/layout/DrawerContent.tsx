@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Home,
@@ -10,14 +10,17 @@ import {
   Sparkles,
   Star,
   ChevronRight,
+  Github,
 } from "lucide-react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { colors, radius } from "../../constants/theme";
+import { colors, gradients, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
+import { useAuthStore } from "../../stores/authStore";
 
 const NAV_ITEMS = [
   { route: "index", label: "Home", icon: Home },
   { route: "projects", label: "Projects", icon: FolderKanban },
+  { route: "repositories", label: "Repositories", icon: Github },
   { route: "workspace", label: "Workspace", icon: Sparkles },
   { route: "agents", label: "Agents", icon: Bot },
   { route: "workflows", label: "Workflows", icon: Workflow },
@@ -25,10 +28,7 @@ const NAV_ITEMS = [
   { route: "settings", label: "Settings", icon: Settings },
 ];
 
-const FAVORITES = [
-  { name: "SaaS Dashboard", color: colors.green },
-  { name: "E-commerce Mobile", color: colors.blue },
-];
+const FAVORITE_COLORS = [colors.green, colors.blue, colors.purple, colors.orange];
 
 interface DrawerContentProps {
   state: {
@@ -44,21 +44,41 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
   const insets = useSafeAreaInsets();
   const activeRoute = state.routes[state.index]?.name ?? "index";
   const projects = useProjectStore((s) => s.projects);
+  const setActiveProject = useProjectStore((s) => s.setActiveProject);
+  const authUser = useAuthStore((s) => s.user);
+  const favorites = projects.slice(0, 3);
+
+  const openProject = (projectId: string) => {
+    const project = projects.find((p) => p.id === projectId);
+    if (project) setActiveProject(project);
+    navigation.navigate("workspace");
+  };
 
   return (
-    <LinearGradient
-      colors={["#0F0F1A", "#0A0A0F"]}
-      style={{ flex: 1, paddingTop: insets.top }}
-    >
+    <LinearGradient colors={[...gradients.screenAlt]} style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: insets.bottom + 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <View style={{ paddingHorizontal: 20, paddingVertical: 16, flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            paddingVertical: 16,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
           <LinearGradient
-            colors={["#A855F7", "#3B82F6"]}
-            style={{ width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" }}
+            colors={[...gradients.purpleBlue]}
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <Sparkles size={20} color="#FFF" />
           </LinearGradient>
@@ -104,35 +124,57 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
           })}
         </View>
 
-        <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 12 }}>
-            <Star size={14} color={colors.textMuted} />
-            <Text style={{ color: colors.textMuted, fontSize: 12, fontWeight: "600", textTransform: "uppercase", letterSpacing: 1 }}>
-              Favorites
-            </Text>
+        {favorites.length > 0 && (
+          <View style={{ paddingHorizontal: 20, marginTop: 24 }}>
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 12 }}>
+              <Star size={14} color={colors.textMuted} />
+              <Text
+                style={{
+                  color: colors.textMuted,
+                  fontSize: 12,
+                  fontWeight: "600",
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                }}
+              >
+                Recent Projects
+              </Text>
+            </View>
+            {favorites.map((project, i) => (
+              <TouchableOpacity
+                key={project.id}
+                onPress={() => openProject(project.id)}
+                style={{ flexDirection: "row", alignItems: "center", paddingVertical: 8, gap: 10 }}
+              >
+                <View
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 4,
+                    backgroundColor: FAVORITE_COLORS[i % FAVORITE_COLORS.length],
+                  }}
+                />
+                <Text style={{ color: colors.textSecondary, fontSize: 14 }} numberOfLines={1}>
+                  {project.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
           </View>
-          {FAVORITES.map((fav) => (
-            <TouchableOpacity
-              key={fav.name}
-              onPress={() => navigation.navigate("workspace")}
-              style={{ flexDirection: "row", alignItems: "center", paddingVertical: 8, gap: 10 }}
-            >
-              <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: fav.color }} />
-              <Text style={{ color: colors.textSecondary, fontSize: 14 }}>{fav.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        )}
 
         <View style={{ marginHorizontal: 16, marginTop: 24, borderRadius: radius.lg, overflow: "hidden" }}>
           <LinearGradient
             colors={["rgba(168,85,247,0.2)", "rgba(59,130,246,0.15)"]}
             style={{ padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: radius.lg }}
           >
-            <Text style={{ color: colors.text, fontWeight: "700", fontSize: 15, marginBottom: 4 }}>Pro Plan</Text>
+            <Text style={{ color: colors.text, fontWeight: "700", fontSize: 15, marginBottom: 4 }}>
+              Pro Plan
+            </Text>
             <Text style={{ color: colors.textSecondary, fontSize: 12, marginBottom: 12 }}>
               Unlimited AI agents & cloud deploys
             </Text>
             <TouchableOpacity
+              onPress={() => navigation.navigate("settings")}
               style={{
                 backgroundColor: colors.purple,
                 paddingVertical: 10,
@@ -140,23 +182,63 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
                 alignItems: "center",
               }}
             >
-              <Text style={{ color: "#FFF", fontWeight: "600", fontSize: 13 }}>Upgrade Now</Text>
+              <Text style={{ color: "#FFF", fontWeight: "600", fontSize: 13 }}>View Settings</Text>
             </TouchableOpacity>
           </LinearGradient>
         </View>
 
-        <View style={{ paddingHorizontal: 20, marginTop: 20, flexDirection: "row", alignItems: "center", gap: 12 }}>
-          <LinearGradient
-            colors={["#A855F7", "#3B82F6"]}
-            style={{ width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center" }}
-          >
-            <Text style={{ color: "#FFF", fontWeight: "700" }}>M</Text>
-          </LinearGradient>
-          <View style={{ flex: 1 }}>
-            <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>Marcus Chen</Text>
-            <Text style={{ color: colors.textMuted, fontSize: 12 }}>{projects.length} projects</Text>
-          </View>
-          <ChevronRight size={16} color={colors.textMuted} />
+        <View
+          style={{
+            paddingHorizontal: 20,
+            marginTop: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 12,
+          }}
+        >
+          {authUser ? (
+            <>
+              <Image
+                source={{ uri: authUser.avatar_url }}
+                style={{ width: 40, height: 40, borderRadius: 20 }}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>
+                  {authUser.name ?? authUser.login}
+                </Text>
+                <Text style={{ color: colors.textMuted, fontSize: 12 }}>@{authUser.login}</Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate("repositories")}>
+                <ChevronRight size={16} color={colors.textMuted} />
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <LinearGradient
+                colors={[...gradients.purpleBlue]}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Github size={18} color="#FFF" />
+              </LinearGradient>
+              <View style={{ flex: 1 }}>
+                <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14 }}>
+                  Sign in with GitHub
+                </Text>
+                <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+                  Access your repositories
+                </Text>
+              </View>
+              <TouchableOpacity onPress={() => navigation.navigate("repositories")}>
+                <ChevronRight size={16} color={colors.textMuted} />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </ScrollView>
     </LinearGradient>

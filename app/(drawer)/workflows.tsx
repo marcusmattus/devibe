@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Workflow, Rocket, Bug, Sparkles, Cloud, GitBranch } from "lucide-react-native";
 import { TopBar } from "../../components/layout/TopBar";
 import { GlassCard } from "../../components/ui/GlassCard";
-import { colors, radius } from "../../constants/theme";
+import { colors, gradients, radius } from "../../constants/theme";
 import { router } from "expo-router";
 
 const WORKFLOWS = [
@@ -56,7 +56,7 @@ export default function WorkflowsScreen() {
   const insets = useSafeAreaInsets();
 
   return (
-    <LinearGradient colors={["#0F0F1A", "#0A0A0F"]} style={{ flex: 1 }}>
+    <LinearGradient colors={[...gradients.screen]} style={{ flex: 1 }}>
       <TopBar
         greeting="Workflows"
         subtitle="Automated pipelines for production apps"

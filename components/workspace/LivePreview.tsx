@@ -2,15 +2,29 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { WebView } from "react-native-webview";
 import { RefreshCw, ExternalLink } from "lucide-react-native";
 import { useState } from "react";
+import { router } from "expo-router";
 import { colors, radius } from "../../constants/theme";
 import { useProjectStore } from "../../stores/projectStore";
+import { useCloudStore } from "../../stores/cloudStore";
 
 type PreviewTab = "preview" | "code" | "deploy";
+
+const DEPLOY_TARGETS = [
+  { label: "EAS (App Store)", id: "eas" },
+  { label: "Vercel", id: "vercel" },
+  { label: "AWS Amplify", id: "aws" },
+  { label: "Google Cloud Run", id: "gcp" },
+] as const;
 
 export function LivePreview() {
   const [activeTab, setActiveTab] = useState<PreviewTab>("preview");
   const [refreshKey, setRefreshKey] = useState(0);
   const activeProject = useProjectStore((s) => s.activeProject);
+  const deployTargets = useCloudStore((s) => s.deployTargets);
+  const deploy = useCloudStore((s) => s.deploy);
+
+  const previewSlug = activeProject?.name.toLowerCase().replace(/\s/g, "-") ?? "preview";
+  const previewUrl = `https://preview.devibe.app/${previewSlug}`;
 
   const previewHtml = `<!DOCTYPE html>
 <html>
@@ -113,7 +127,7 @@ export function LivePreview() {
         <TouchableOpacity onPress={() => setRefreshKey((k) => k + 1)} style={{ padding: 8 }}>
           <RefreshCw size={16} color={colors.textMuted} />
         </TouchableOpacity>
-        <TouchableOpacity style={{ padding: 8 }}>
+        <TouchableOpacity onPress={() => router.push("/cloud")} style={{ padding: 8 }}>
           <ExternalLink size={16} color={colors.textMuted} />
         </TouchableOpacity>
       </View>
@@ -144,8 +158,8 @@ export function LivePreview() {
             paddingVertical: 4,
           }}
         >
-          <Text style={{ color: colors.textMuted, fontSize: 11 }}>
-            https://preview.devibe.app/{activeProject?.name.toLowerCase().replace(/\s/g, "-")}
+          <Text style={{ color: colors.textMuted, fontSize: 11 }} numberOfLines={1}>
+            {previewUrl}
           </Text>
         </View>
       </View>
@@ -171,25 +185,40 @@ export function LivePreview() {
           <Text style={{ color: colors.text, fontWeight: "600", marginBottom: 12 }}>
             One-Click Deploy
           </Text>
-          {["EAS (App Store)", "Vercel", "AWS Amplify", "Google Cloud Run"].map((target) => (
-            <TouchableOpacity
-              key={target}
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: 14,
-                backgroundColor: colors.card,
-                borderRadius: radius.md,
-                borderWidth: 1,
-                borderColor: colors.border,
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ color: colors.text, fontSize: 14 }}>{target}</Text>
-              <Text style={{ color: colors.purple, fontSize: 13, fontWeight: "600" }}>Deploy</Text>
-            </TouchableOpacity>
-          ))}
+          {DEPLOY_TARGETS.map((target) => {
+            const status = deployTargets.find((t) => t.id === target.id)?.status ?? "ready";
+            return (
+              <TouchableOpacity
+                key={target.id}
+                onPress={() => deploy(target.id)}
+                disabled={status === "deploying"}
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: 14,
+                  backgroundColor: colors.card,
+                  borderRadius: radius.md,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  marginBottom: 8,
+                  opacity: status === "deploying" ? 0.6 : 1,
+                }}
+              >
+                <Text style={{ color: colors.text, fontSize: 14 }}>{target.label}</Text>
+                <Text
+                  style={{
+                    color: status === "live" ? colors.green : colors.purple,
+                    fontSize: 13,
+                    fontWeight: "600",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {status === "deploying" ? "Deploying..." : status === "live" ? "Live" : "Deploy"}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
       )}
     </View>
