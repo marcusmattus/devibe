@@ -88,7 +88,7 @@ export const useAgentStore = create<AgentState>((set, get) => ({
       id: "welcome",
       role: "assistant",
       content:
-        "Hey! I'm your Cursor Mobile AI team. I can edit code in real-time, generate cloud infrastructure, fix production bugs, and help you ship Expo apps to the App Store. What would you like to build?",
+        "Hey! I'm your DeVibe Cloud AI team. I can edit code in real-time, generate cloud infrastructure, fix production bugs, and help you ship Expo apps to the App Store. What would you like to build?",
       agentId: "orchestrator",
       timestamp: new Date(),
     },

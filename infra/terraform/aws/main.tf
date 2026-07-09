@@ -17,7 +17,7 @@ variable "aws_region" {
 }
 
 variable "app_name" {
-  default = "vibecursor-app"
+  default = "devibe-app"
 }
 
 variable "environment" {
@@ -51,7 +51,7 @@ resource "aws_db_instance" "primary" {
   max_allocated_storage = 1000
   storage_encrypted    = true
 
-  db_name  = "vibecursor"
+  db_name  = "devibe"
   username = "admin"
   password = var.db_password
 

@@ -1,8 +1,8 @@
-# VibeCursor Pro — Product Requirements Document
+# DeVibe Cloud Mobile — Product Requirements Document
 
 ## Overview
 
-**VibeCursor Pro** is a mobile AI coding companion that brings the VS Code + Cursor experience to iPhone (iOS-first, Android compatible). It targets developers building production-ready Expo (React Native) apps who need deep AI agent integration, Monaco Editor power, and scalable cloud infrastructure generation.
+**DeVibe Cloud Mobile** is the DeVibe mobile companion that brings the VS Code + Cursor experience to iPhone (iOS-first, Android compatible). It targets developers building production-ready Expo (React Native) apps who need deep AI agent integration, Monaco Editor power, and scalable cloud infrastructure generation.
 
 ## Problem Statement
 
@@ -26,7 +26,7 @@ Mobile developers lack a native, production-grade coding environment with:
 - Custom `devibe-dark` theme matching purple (#A855F7) accents
 - File explorer with project tree navigation
 
-### 2. Cursor Mobile AI (P0)
+### 2. DeVibe Cloud AI (P0)
 - Natural language chat with multi-agent team:
   - Orchestrator, Frontend, Backend, Cloud DevOps, QA, Security
 - Real-time code patches applied to Monaco editor

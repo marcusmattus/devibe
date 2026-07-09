@@ -63,8 +63,8 @@ export function DrawerContent({ state, navigation }: DrawerContentProps) {
             <Sparkles size={20} color="#FFF" />
           </LinearGradient>
           <View>
-            <Text style={{ color: colors.text, fontSize: 18, fontWeight: "700" }}>VibeCursor</Text>
-            <Text style={{ color: colors.purple, fontSize: 11, fontWeight: "600" }}>PRO</Text>
+            <Text style={{ color: colors.text, fontSize: 18, fontWeight: "700" }}>DeVibe</Text>
+            <Text style={{ color: colors.purple, fontSize: 11, fontWeight: "600" }}>CLOUD MOBILE</Text>
           </View>
         </View>
 

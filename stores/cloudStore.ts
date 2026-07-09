@@ -81,7 +81,7 @@ export const useCloudStore = create<CloudState>((set, get) => ({
     set((state) => ({
       deployTargets: state.deployTargets.map((t) =>
         t.id === targetId
-          ? { ...t, status: "live" as const, url: `https://${targetId}.vibecursor.app` }
+          ? { ...t, status: "live" as const, url: `https://${targetId}.devibe.app` }
           : t
       ),
       activities: [

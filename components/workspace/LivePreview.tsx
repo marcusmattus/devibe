@@ -62,7 +62,7 @@ export function LivePreview() {
 <body>
   <div class="card">
     <div class="orb"></div>
-    <h1>${activeProject?.name ?? "VibeCursor Pro"}</h1>
+    <h1>${activeProject?.name ?? "DeVibe Cloud Mobile"}</h1>
     <p>Live preview of your Expo app. Changes sync in real-time as AI agents edit your code.</p>
     <span class="badge">Expo Preview</span>
   </div>
@@ -145,7 +145,7 @@ export function LivePreview() {
           }}
         >
           <Text style={{ color: colors.textMuted, fontSize: 11 }}>
-            https://preview.vibecursor.app/{activeProject?.name.toLowerCase().replace(/\s/g, "-")}
+            https://preview.devibe.app/{activeProject?.name.toLowerCase().replace(/\s/g, "-")}
           </Text>
         </View>
       </View>

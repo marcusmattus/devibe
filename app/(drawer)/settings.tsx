@@ -18,7 +18,7 @@ export default function SettingsScreen() {
     <LinearGradient colors={["#0F0F1A", "#0A0A0F"]} style={{ flex: 1 }}>
       <TopBar
         greeting="Settings"
-        subtitle="Configure your VibeCursor Pro experience"
+        subtitle="Configure your DeVibe Cloud Mobile experience"
         showSearch={false}
         onMenuPress={() => navigation.dispatch(DrawerActions.openDrawer())}
       />
@@ -90,11 +90,11 @@ export default function SettingsScreen() {
         <GlassCard>
           <View style={{ padding: 16 }}>
             <Text style={{ color: colors.text, fontWeight: "600", fontSize: 14, marginBottom: 8 }}>
-              About VibeCursor Pro
+              About DeVibe Cloud Mobile
             </Text>
             <Text style={{ color: colors.textMuted, fontSize: 13, lineHeight: 20 }}>
               Version 1.0.0{"\n"}
-              The ultimate mobile AI coding companion for Expo production apps.{"\n\n"}
+              The DeVibe mobile companion for Expo production apps.{"\n\n"}
               Built with Expo, Monaco Editor, and multi-agent AI.
             </Text>
           </View>

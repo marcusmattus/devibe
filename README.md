@@ -1,15 +1,15 @@
-# VibeCursor Pro
+# DeVibe Cloud Mobile
 
-The ultimate mobile AI coding companion. A full-featured Expo (React Native) app that brings the VS Code + Cursor experience to your iPhone — with Monaco Editor, multi-agent AI, and production cloud infrastructure generation.
+The DeVibe mobile companion for production Expo apps. A full-featured Expo (React Native) app that brings the VS Code + Cursor experience to your iPhone — with Monaco Editor, multi-agent AI, and production cloud infrastructure generation.
 
-![VibeCursor Pro](https://img.shields.io/badge/Expo-SDK%2057-4630EB?style=flat-square)
+![DeVibe Cloud Mobile](https://img.shields.io/badge/Expo-SDK%2057-4630EB?style=flat-square)
 ![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey?style=flat-square)
 ![Theme](https://img.shields.io/badge/UI-DeVibe%20Dark%20Neon-A855F7?style=flat-square)
 
 ## Features
 
 - **Monaco Editor** — Full VS Code engine in a WebView with custom `devibe-dark` theme, syntax highlighting, and multi-file editing
-- **Cursor Mobile AI** — Multi-agent team (Frontend, Backend, Cloud DevOps, QA, Security) with real-time code patches
+- **DeVibe Cloud AI** — Multi-agent team (Frontend, Backend, Cloud DevOps, QA, Security) with real-time code patches
 - **DeVibe UI** — Dark futuristic purple/blue neon theme with glassmorphism, glowing elements, and animated neon orb
 - **Live Preview & Deploy** — Expo/web preview with one-click deploy to EAS, Vercel, AWS, or GCP
 - **Cloud Factory** — Terraform templates for AWS & GCP with auto-scaling, monitoring, and storage
@@ -30,7 +30,7 @@ The ultimate mobile AI coding companion. A full-featured Expo (React Native) app
 ```bash
 # Clone and install
 git clone <repo-url>
-cd vibecursor-pro
+cd devibe-cloud-mobile
 npm install
 
 # Start Expo dev server
@@ -57,7 +57,7 @@ npm run lint
 ## Project Structure
 
 ```
-vibecursor-pro/
+devibe-cloud-mobile/
 ├── app/                    # Expo Router screens
 │   └── (drawer)/           # Drawer navigation screens
 │       ├── index.tsx       # Home dashboard (DeVibe style)
@@ -127,7 +127,7 @@ Includes: auto-scaling compute, HA databases with read replicas, CDN-backed stor
 
 ## Expo to Production
 
-VibeCursor Pro helps bridge the gap from Expo development to production:
+DeVibe Cloud Mobile helps bridge the gap from Expo development to production:
 
 1. **EAS Build** — Pre-configured `eas.json` in sample projects
 2. **Cloud Infra** — Generate Terraform for your backend

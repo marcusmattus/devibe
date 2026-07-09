@@ -39,7 +39,7 @@ export default function RootLayout() {
 export default function Home() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome to VibeCursor Pro</Text>
+      <Text style={styles.title}>Welcome to DeVibe Cloud Mobile</Text>
       <Text style={styles.subtitle}>
         Build production-ready Expo apps with AI
       </Text>

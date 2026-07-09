@@ -54,7 +54,7 @@ export function AgentChat() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <Bot size={18} color={colors.purple} />
           <Text style={{ color: colors.text, fontWeight: "600", fontSize: 15 }}>
-            Cursor Mobile AI
+            DeVibe Cloud AI
           </Text>
         </View>
         <TouchableOpacity onPress={clearMessages}>

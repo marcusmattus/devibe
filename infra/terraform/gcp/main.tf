@@ -22,7 +22,7 @@ variable "gcp_region" {
 }
 
 variable "app_name" {
-  default = "vibecursor-app"
+  default = "devibe-app"
 }
 
 variable "environment" {
@@ -105,7 +105,7 @@ resource "google_sql_database_instance" "main" {
 }
 
 resource "google_sql_database" "main" {
-  name     = "vibecursor"
+  name     = "devibe"
   instance = google_sql_database_instance.main.name
 }
 
